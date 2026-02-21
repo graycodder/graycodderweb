@@ -1,0 +1,63 @@
+{
+    "blog": {
+        "post_001": {
+            "title": "The Future of Web Development",
+            "excerpt": "Exploring upcoming trends in web technologies and frameworks for 2024.",
+            "content": "Web development is constantly evolving. In 2024, we expect to see a rise in AI-driven development tools, the dominance of server-side rendering, and new CSS features that make layout even easier...",
+            "author": "Alex Developer",
+            "date": "2023-11-15",
+            "imageUrl": "https://placehold.co/600x400/png",
+            "category": "Technology",
+            "createdAt": "2023-11-15T09:00:00Z"
+        },
+        "post_002": {
+            "title": "Understanding Kubernetes",
+            "excerpt": "A beginner's guide to container orchestration with Kubernetes.",
+            "content": "Kubernetes has become the standard for container orchestration. It allows you to automate deployment, scaling, and management of containerized applications...",
+            "author": "Jane DevOps",
+            "date": "2023-12-01",
+            "imageUrl": "https://placehold.co/600x400/png",
+            "category": "DevOps",
+            "createdAt": "2023-12-01T14:30:00Z"
+        },
+        "post_003": {
+            "title": "Mastering UI/UX Design",
+            "excerpt": "Key principles for creating intuitive and beautiful user interfaces.",
+            "content": "Great UI/UX is about more than just aesthetics. It's about understanding the user's journey and making it as seamless as possible. Consistency, feedback, and simplicity are key...",
+            "author": "Sarah Designer",
+            "date": "2024-01-10",
+            "imageUrl": "https://placehold.co/600x400/png",
+            "category": "Design",
+            "createdAt": "2024-01-10T11:15:00Z"
+        }
+    },
+    "portfolio": {
+        "project_001": {
+            "title": "E-Commerce Platform",
+            "description": "A full-featured e-commerce solution with inventory management, payment processing, and customer analytics.",
+            "category": "Web Application",
+            "imageUrl": "https://placehold.co/600x400/png",
+            "link": "https://example.com/project1",
+            "date": "2023-08-20",
+            "createdAt": "2023-08-20T10:00:00Z"
+        },
+        "project_002": {
+            "title": "Files Finance Dashboard",
+            "description": "A real-time financial dashboard for tracking investments and market trends.",
+            "category": "FinTech",
+            "imageUrl": "https://placehold.co/600x400/png",
+            "link": "https://example.com/project2",
+            "date": "2023-09-12",
+            "createdAt": "2023-09-12T13:45:00Z"
+        },
+        "project_003": {
+            "title": "Health Tracker App",
+            "description": "A mobile-first application for tracking daily health metrics and workout routines.",
+            "category": "Mobile App",
+            "imageUrl": "https://placehold.co/600x400/png",
+            "link": "https://example.com/project3",
+            "date": "2023-10-05",
+            "createdAt": "2023-10-05T08:30:00Z"
+        }
+    }
+}
