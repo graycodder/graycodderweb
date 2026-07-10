@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
+    "clean": "npm cache clean --force",
     "build": "vite build",
     "dev": "vite"
   },

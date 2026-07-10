@@ -1,43 +1,76 @@
 import React from 'react';
 import { Globe, Smartphone, Lightbulb, Code, Rocket, Headphones } from 'lucide-react';
+import { useTranslation } from '../../lib/i18n';
 
 export function Services() {
+  const { t } = useTranslation();
+
   const services = [
     {
       icon: Globe,
-      title: 'Website Development',
-      description: 'Custom, responsive websites built with modern technologies. From simple landing pages to complex web applications.',
-      features: ['Custom Design', 'Responsive Layout', 'SEO Optimized', 'Fast Performance']
+      title: t('services.web.title'),
+      description: t('services.web.description'),
+      features: [
+        t('services.web.f1'),
+        t('services.web.f2'),
+        t('services.web.f3'),
+        t('services.web.f4')
+      ]
     },
     {
       icon: Smartphone,
-      title: 'Mobile App Development',
-      description: 'Native and cross-platform mobile applications for iOS and Android that deliver exceptional user experiences.',
-      features: ['iOS & Android', 'Cross-Platform', 'User-Friendly UI', 'Scalable Architecture']
+      title: t('services.mobile.title'),
+      description: t('services.mobile.description'),
+      features: [
+        t('services.mobile.f1'),
+        t('services.mobile.f2'),
+        t('services.mobile.f3'),
+        t('services.mobile.f4')
+      ]
     },
     {
       icon: Lightbulb,
-      title: 'Business Ideas & Planning',
-      description: 'Strategic business planning and technical consulting to transform your ideas into successful digital products.',
-      features: ['Market Analysis', 'Technical Strategy', 'Project Planning', 'ROI Optimization']
+      title: t('services.ideas.title'),
+      description: t('services.ideas.description'),
+      features: [
+        t('services.ideas.f1'),
+        t('services.ideas.f2'),
+        t('services.ideas.f3'),
+        t('services.ideas.f4')
+      ]
     },
     {
       icon: Code,
-      title: 'Custom Software Solutions',
-      description: 'Tailored software solutions designed to meet your specific business requirements and workflows.',
-      features: ['Custom Development', 'API Integration', 'Database Design', 'Cloud Solutions']
+      title: t('services.software.title'),
+      description: t('services.software.description'),
+      features: [
+        t('services.software.f1'),
+        t('services.software.f2'),
+        t('services.software.f3'),
+        t('services.software.f4')
+      ]
     },
     {
       icon: Rocket,
-      title: 'Digital Transformation',
-      description: 'Help businesses modernize their operations and embrace digital technologies for growth and efficiency.',
-      features: ['Process Automation', 'Legacy Migration', 'Cloud Adoption', 'Digital Strategy']
+      title: t('services.digital.title'),
+      description: t('services.digital.description'),
+      features: [
+        t('services.digital.f1'),
+        t('services.digital.f2'),
+        t('services.digital.f3'),
+        t('services.digital.f4')
+      ]
     },
     {
       icon: Headphones,
-      title: 'Ongoing Support & Maintenance',
-      description: 'Comprehensive support and maintenance services to keep your applications running smoothly.',
-      features: ['24/7 Support', 'Bug Fixes', 'Updates & Upgrades', 'Performance Monitoring']
+      title: t('services.support.title'),
+      description: t('services.support.description'),
+      features: [
+        t('services.support.f1'),
+        t('services.support.f2'),
+        t('services.support.f3'),
+        t('services.support.f4')
+      ]
     }
   ];
 
@@ -46,10 +79,10 @@ export function Services() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Our Services
+            {t('services.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            End-to-end technical solutions to improve and grow your business
+            {t('services.subtitle')}
           </p>
         </div>
 
@@ -85,16 +118,16 @@ export function Services() {
 
         <div className="mt-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 md:p-12 text-white text-center">
           <h3 className="text-2xl md:text-3xl font-bold mb-4">
-            Ready to Transform Your Business?
+            {t('services.readyTitle')}
           </h3>
           <p className="text-lg mb-6 opacity-90">
-            Let's discuss how we can help you achieve your business goals with our technical expertise.
+            {t('services.readyDesc')}
           </p>
           <button 
             onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors cursor-pointer"
           >
-            Contact Us Today
+            {t('services.contactBtn')}
           </button>
         </div>
       </div>

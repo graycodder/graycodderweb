@@ -77,9 +77,9 @@ export function AdminPanel({
       toast.success('Blog post added successfully!');
       onRefresh();
       setBlogForm({ title: '', excerpt: '', content: '', author: '', category: '', imageUrl: '' });
-      setIsAddingBlog(false);
     } catch (error) {
-      toast.error('Failed to add blog post');
+      console.error('Error adding blog post:', error);
+      toast.error(`Failed to add blog post: ${(error as Error).message}`);
     }
   };
 
@@ -91,9 +91,9 @@ export function AdminPanel({
       toast.success('Blog post updated successfully!');
       onRefresh();
       setEditingBlog(null);
-      setBlogForm({ title: '', excerpt: '', content: '', author: '', category: '', imageUrl: '' });
     } catch (error) {
-      toast.error('Failed to update blog post');
+      console.error('Error updating blog post:', error);
+      toast.error(`Failed to update blog post: ${(error as Error).message}`);
     }
   };
 
@@ -102,9 +102,9 @@ export function AdminPanel({
       try {
         await deleteBlogPost(id);
         toast.success('Blog post deleted successfully!');
-        onRefresh();
       } catch (error) {
-        toast.error('Failed to delete blog post');
+        console.error('Error deleting blog post:', error);
+        toast.error(`Failed to delete blog post: ${(error as Error).message}`);
       }
     }
   };
@@ -130,9 +130,9 @@ export function AdminPanel({
       toast.success('Portfolio item added successfully!');
       onRefresh();
       setPortfolioForm({ title: '', description: '', category: '', imageUrl: '', link: '' });
-      setIsAddingPortfolio(false);
     } catch (error) {
-      toast.error('Failed to add portfolio item');
+      console.error('Error adding portfolio item:', error);
+      toast.error(`Failed to add portfolio item: ${(error as Error).message}`);
     }
   };
 
@@ -144,9 +144,9 @@ export function AdminPanel({
       toast.success('Portfolio item updated successfully!');
       onRefresh();
       setEditingPortfolio(null);
-      setPortfolioForm({ title: '', description: '', category: '', imageUrl: '', link: '' });
     } catch (error) {
-      toast.error('Failed to update portfolio item');
+      console.error('Error updating portfolio item:', error);
+      toast.error(`Failed to update portfolio item: ${(error as Error).message}`);
     }
   };
 
@@ -155,9 +155,9 @@ export function AdminPanel({
       try {
         await deletePortfolioItem(id);
         toast.success('Portfolio item deleted successfully!');
-        onRefresh();
       } catch (error) {
-        toast.error('Failed to delete portfolio item');
+        console.error('Error deleting portfolio item:', error);
+        toast.error(`Failed to delete portfolio item: ${(error as Error).message}`);
       }
     }
   };

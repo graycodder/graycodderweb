@@ -1,16 +1,43 @@
 import React from 'react';
 import { Target, Eye, Award } from 'lucide-react';
+import { useTranslation } from '../../lib/i18n';
 
-export function About() {
+interface AboutProps {
+  onAdminClick: () => void;
+}
+
+export function About({ onAdminClick }: AboutProps) {
+  const { t } = useTranslation();
+
+  const renderAddressWithClick = (addressText: string) => {
+    const parts = addressText.split('KL-02-0105921');
+    if (parts.length === 2) {
+      return (
+        <>
+          {parts[0]}
+          <span 
+            onDoubleClick={onAdminClick} 
+            className="cursor-pointer select-all font-semibold hover:text-blue-600 transition-colors"
+            title="Double click to open admin panel"
+          >
+            KL-02-0105921
+          </span>
+          {parts[1]}
+        </>
+      );
+    }
+    return addressText;
+  };
+
   return (
     <section id="about" className="py-16 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            About Graycodder
+            {t('about.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Empowering businesses with cutting-edge technology solutions from the heart of Kerala
+            {t('about.subtitle')}
           </p>
         </div>
 
@@ -25,25 +52,17 @@ export function About() {
 
           <div className="space-y-6">
             <p className="text-gray-700 leading-relaxed">
-              Established with a vision to transform businesses through technology, Graycodder has been 
-              serving clients for over 14 years from our base in Chellanam, Kochi, Kerala. We specialize 
-              in providing comprehensive technical solutions that drive business growth and innovation.
+              {t('about.desc1')}
             </p>
 
             <p className="text-gray-700 leading-relaxed">
-              Our team of experienced professionals is dedicated to delivering end-to-end website development 
-              and mobile application development services. We don't just build applications; we create 
-              solutions that help businesses flourish in the digital age.
+              {t('about.desc2')}
             </p>
 
             <div className="bg-blue-50 p-6 rounded-lg">
-              <h3 className="font-bold text-gray-900 mb-2">Our Location</h3>
-              <p className="text-gray-700">
-                Graycodder<br />
-                Reg No: KL-02-0105921<br />
-                Building Number: 16/149<br />
-                S. Chellanam, Kochi - 682008<br />
-                Kerala, India
+              <h3 className="font-bold text-gray-900 mb-2">{t('about.locationTitle')}</h3>
+              <p className="text-gray-700 whitespace-pre-line">
+                {renderAddressWithClick(t('about.locationAddress'))}
               </p>
             </div>
           </div>
@@ -54,9 +73,9 @@ export function About() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 text-white rounded-full mb-4">
               <Eye className="w-8 h-8" />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">Our Vision</h3>
+            <h3 className="font-bold text-gray-900 mb-2">{t('about.visionTitle')}</h3>
             <p className="text-gray-700">
-              Flourish with Us - Empowering businesses to thrive through innovative technology solutions
+              {t('about.visionDesc')}
             </p>
           </div>
 
@@ -64,9 +83,9 @@ export function About() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 text-white rounded-full mb-4">
               <Target className="w-8 h-8" />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">Our Mission</h3>
+            <h3 className="font-bold text-gray-900 mb-2">{t('about.missionTitle')}</h3>
             <p className="text-gray-700">
-              Deliver excellence in technical solutions and ideas to improve businesses across industries
+              {t('about.missionDesc')}
             </p>
           </div>
 
@@ -74,9 +93,9 @@ export function About() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-600 text-white rounded-full mb-4">
               <Award className="w-8 h-8" />
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">Our Commitment</h3>
+            <h3 className="font-bold text-gray-900 mb-2">{t('about.commitmentTitle')}</h3>
             <p className="text-gray-700">
-              End-to-end solutions with 14+ years of expertise ensuring quality and client satisfaction
+              {t('about.commitmentDesc')}
             </p>
           </div>
         </div>

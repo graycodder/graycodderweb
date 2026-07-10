@@ -1,7 +1,13 @@
 import React from 'react';
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { useTranslation } from '../../lib/i18n';
 
-export function Footer() {
+interface FooterProps {
+  onAdminClick: () => void;
+}
+
+export function Footer({ onAdminClick }: FooterProps) {
+  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -12,8 +18,7 @@ export function Footer() {
           <div className="md:col-span-2">
             <h3 className="text-2xl font-bold mb-4">Graycodder</h3>
             <p className="text-gray-400 mb-4">
-              Flourish with Us - Empowering businesses with innovative technical solutions
-              and ideas. 14+ years of excellence in IT industry.
+              {t('footer.description')}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
@@ -33,31 +38,31 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
+            <h4 className="font-semibold mb-4">{t('footer.linksTitle')}</h4>
             <ul className="space-y-2 text-gray-400">
               <li>
                 <a href="#home" className="hover:text-white transition-colors">
-                  Home
+                  {t('nav.home')}
                 </a>
               </li>
               <li>
                 <a href="#about" className="hover:text-white transition-colors">
-                  About Us
+                  {t('nav.about')}
                 </a>
               </li>
               <li>
                 <a href="#services" className="hover:text-white transition-colors">
-                  Services
+                  {t('nav.services')}
                 </a>
               </li>
               <li>
                 <a href="#portfolio" className="hover:text-white transition-colors">
-                  Portfolio
+                  {t('nav.portfolio')}
                 </a>
               </li>
               <li>
                 <a href="#blog" className="hover:text-white transition-colors">
-                  Blog
+                  {t('nav.blog')}
                 </a>
               </li>
             </ul>
@@ -65,7 +70,7 @@ export function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-semibold mb-4">Contact</h4>
+            <h4 className="font-semibold mb-4">{t('footer.contactTitle')}</h4>
             <ul className="space-y-3 text-gray-400">
               <li className="flex items-start">
                 <MapPin className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
@@ -93,7 +98,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
           <p>
-            © {currentYear} Graycodder. Reg No: KL-02-0105921. All rights reserved.
+            © {currentYear} Graycodder. Reg No: <span onDoubleClick={onAdminClick} className="cursor-pointer select-all font-semibold hover:text-blue-400 transition-colors" title="Double click to open admin panel">KL-02-0105921</span>. {t('footer.rights')}
           </p>
         </div>
       </div>

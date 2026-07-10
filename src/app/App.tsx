@@ -13,6 +13,7 @@ import { AdminPanel } from './components/AdminPanel';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { getBlogs, getPortfolioItems, BlogPost, PortfolioItem } from '../lib/firestore';
+import { LanguageProvider } from '../lib/i18n';
 
 export default function App() {
   const [showAdminLogin, setShowAdminLogin] = useState(false);
@@ -75,38 +76,40 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
-      <Toaster position="top-center" />
+    <LanguageProvider>
+      <div className="min-h-screen bg-white">
+        <Toaster position="top-center" />
 
-      <Header onNavigate={handleNavigate} onAdminClick={handleAdminClick} />
+        <Header onNavigate={handleNavigate} />
 
-      <main>
-        <Hero onNavigate={handleNavigate} />
-        <About />
-        <Services />
-        <Portfolio />
-        <Blog />
-        <Contact />
-      </main>
+        <main>
+          <Hero onNavigate={handleNavigate} />
+          <About onAdminClick={handleAdminClick} />
+          <Services />
+          <Portfolio />
+          <Blog />
+          <Contact onAdminClick={handleAdminClick} />
+        </main>
 
-      <Footer />
+        <Footer onAdminClick={handleAdminClick} />
 
-      {showAdminLogin && (
-        <AdminLogin
-          onLogin={handleLoginSuccess}
-          onClose={() => setShowAdminLogin(false)}
-        />
-      )}
+        {showAdminLogin && (
+          <AdminLogin
+            onLogin={handleLoginSuccess}
+            onClose={() => setShowAdminLogin(false)}
+          />
+        )}
 
-      {showAdminPanel && (
-        <AdminPanel
-          onClose={() => setShowAdminPanel(false)}
-          onLogout={handleLogout}
-          blogPosts={blogPosts}
-          portfolioItems={portfolioItems}
-          onRefresh={fetchAllData}
-        />
-      )}
-    </div>
+        {showAdminPanel && (
+          <AdminPanel
+            onClose={() => setShowAdminPanel(false)}
+            onLogout={handleLogout}
+            blogPosts={blogPosts}
+            portfolioItems={portfolioItems}
+            onRefresh={fetchAllData}
+          />
+        )}
+      </div>
+    </LanguageProvider>
   );
 }

@@ -2,12 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { ExternalLink, Calendar } from 'lucide-react';
 import { Button } from './ui/button';
 import { getPortfolioItems, PortfolioItem } from '../../lib/firestore';
+import { useTranslation } from '../../lib/i18n';
 
 export function Portfolio() {
+  const { t } = useTranslation();
   const categories = ['All', 'Web Development', 'Mobile App', 'E-Commerce', 'Custom Software'];
   const [selectedCategory, setSelectedCategory] = React.useState('All');
   const [items, setItems] = useState<PortfolioItem[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const getCategoryLabel = (category: string) => {
+    switch (category) {
+      case 'All': return t('portfolio.category.all');
+      case 'Web Development': return t('portfolio.category.web');
+      case 'Mobile App': return t('portfolio.category.mobile');
+      case 'E-Commerce': return t('portfolio.category.ecommerce');
+      case 'Custom Software': return t('portfolio.category.custom');
+      default: return category;
+    }
+  };
 
   useEffect(() => {
     const fetchItems = async () => {
@@ -32,7 +45,7 @@ export function Portfolio() {
     return (
       <section id="portfolio" className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-xl text-gray-600">Loading portfolio items...</p>
+          <p className="text-xl text-gray-600">{t('portfolio.loading')}</p>
         </div>
       </section>
     );
@@ -43,10 +56,10 @@ export function Portfolio() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Our Portfolio
+            {t('portfolio.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Showcasing our successful projects and innovative solutions
+            {t('portfolio.subtitle')}
           </p>
         </div>
 
@@ -59,7 +72,7 @@ export function Portfolio() {
               onClick={() => setSelectedCategory(category)}
               className={selectedCategory === category ? 'bg-blue-600' : ''}
             >
-              {category}
+              {getCategoryLabel(category)}
             </Button>
           ))}
         </div>
@@ -79,7 +92,7 @@ export function Portfolio() {
                 />
                 <div className="absolute top-4 right-4">
                   <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
-                    {item.category}
+                    {getCategoryLabel(item.category)}
                   </span>
                 </div>
               </div>
@@ -106,7 +119,7 @@ export function Portfolio() {
                       rel="noopener noreferrer"
                       className="flex items-center text-blue-600 hover:text-blue-700"
                     >
-                      <span className="text-sm mr-1">View</span>
+                      <span className="text-sm mr-1">{t('portfolio.view')}</span>
                       <ExternalLink className="w-4 h-4" />
                     </a>
                   )}
@@ -118,7 +131,7 @@ export function Portfolio() {
 
         {filteredItems.length === 0 && (
           <div className="text-center py-12 text-gray-500">
-            No portfolio items found in this category.
+            {t('portfolio.empty')}
           </div>
         )}
       </div>

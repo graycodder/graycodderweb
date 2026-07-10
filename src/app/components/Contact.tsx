@@ -4,8 +4,14 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { toast } from 'sonner';
+import { useTranslation } from '../../lib/i18n';
 
-export function Contact() {
+interface ContactProps {
+  onAdminClick: () => void;
+}
+
+export function Contact({ onAdminClick }: ContactProps) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -21,7 +27,7 @@ export function Contact() {
     try {
       const accessKey = import.meta.env.VITE_WEB3FORMS_ACCESS_KEY;
       if (!accessKey) {
-        toast.error('Web3Forms Access Key is missing. Please configure it in .env');
+        toast.error(t('contact.toastErrorKey'));
         setIsSubmitting(false);
         return;
       }
@@ -41,13 +47,13 @@ export function Contact() {
       const result = await response.json();
 
       if (response.status === 200) {
-        toast.success('Thank you! We will get back to you soon.');
+        toast.success(t('contact.toastSuccess'));
         setFormData({ name: '', email: '', phone: '', message: '' });
       } else {
-        toast.error(result.message || 'Something went wrong. Please try again.');
+        toast.error(result.message || t('contact.toastError'));
       }
     } catch (error) {
-      toast.error('An error occurred. Please try again later.');
+      toast.error(t('contact.toastErrorGeneric'));
     } finally {
       setIsSubmitting(false);
     }
@@ -60,15 +66,35 @@ export function Contact() {
     });
   };
 
+  const renderAddressWithClick = (addressText: string) => {
+    const parts = addressText.split('KL-02-0105921');
+    if (parts.length === 2) {
+      return (
+        <>
+          {parts[0]}
+          <span 
+            onDoubleClick={onAdminClick} 
+            className="cursor-pointer select-all font-semibold hover:text-blue-600 transition-colors"
+            title="Double click to open admin panel"
+          >
+            KL-02-0105921
+          </span>
+          {parts[1]}
+        </>
+      );
+    }
+    return addressText;
+  };
+
   return (
     <section id="contact" className="py-16 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Get in Touch
+            {t('contact.title')}
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Let's discuss how we can help flourish your business
+            {t('contact.subtitle')}
           </p>
         </div>
 
@@ -77,7 +103,7 @@ export function Contact() {
           <div className="space-y-8">
             <div>
               <h3 className="text-2xl font-bold text-gray-900 mb-6">
-                Contact Information
+                {t('contact.infoTitle')}
               </h3>
 
               <div className="space-y-4">
@@ -86,13 +112,9 @@ export function Contact() {
                     <MapPin className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Address</h4>
-                    <p className="text-gray-600">
-                      Graycodder<br />
-                      Reg No: KL-02-0105921<br />
-                      Building Number: 16/149<br />
-                      S. Chellanam, Kochi - 682008<br />
-                      Kerala, India
+                    <h4 className="font-semibold text-gray-900 mb-1">{t('contact.address')}</h4>
+                    <p className="text-gray-600 whitespace-pre-line">
+                      {renderAddressWithClick(t('about.locationAddress'))}
                     </p>
                   </div>
                 </div>
@@ -102,7 +124,7 @@ export function Contact() {
                     <Mail className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Email</h4>
+                    <h4 className="font-semibold text-gray-900 mb-1">{t('contact.email')}</h4>
                     <a href="mailto:graycodder@graycodder.com" className="text-blue-600 hover:text-blue-700">
                       graycodder@graycodder.com
                     </a>
@@ -114,7 +136,7 @@ export function Contact() {
                     <Phone className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Phone</h4>
+                    <h4 className="font-semibold text-gray-900 mb-1">{t('contact.phone')}</h4>
                     <a href="tel:+918075050701" className="text-blue-600 hover:text-blue-700">
                       +91 8075050701
                     </a>
@@ -140,13 +162,13 @@ export function Contact() {
           {/* Contact Form */}
           <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-lg">
             <h3 className="text-2xl font-bold text-gray-900 mb-6">
-              Send us a Message
+              {t('contact.messageTitle')}
             </h3>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Name *
+                  {t('contact.label.name')}
                 </label>
                 <Input
                   id="name"
@@ -155,13 +177,13 @@ export function Contact() {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="Your name"
+                  placeholder={t('contact.placeholder.name')}
                 />
               </div>
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email *
+                  {t('contact.label.email')}
                 </label>
                 <Input
                   id="email"
@@ -170,13 +192,13 @@ export function Contact() {
                   required
                   value={formData.email}
                   onChange={handleChange}
-                  placeholder="your.email@example.com"
+                  placeholder={t('contact.placeholder.email')}
                 />
               </div>
 
               <div>
                 <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                  Phone
+                  {t('contact.label.phone')}
                 </label>
                 <Input
                   id="phone"
@@ -184,13 +206,13 @@ export function Contact() {
                   type="tel"
                   value={formData.phone}
                   onChange={handleChange}
-                  placeholder="+91 12345 67890"
+                  placeholder={t('contact.placeholder.phone')}
                 />
               </div>
 
               <div>
                 <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                  Message *
+                  {t('contact.label.message')}
                 </label>
                 <Textarea
                   id="message"
@@ -198,7 +220,7 @@ export function Contact() {
                   required
                   value={formData.message}
                   onChange={handleChange}
-                  placeholder="Tell us about your project..."
+                  placeholder={t('contact.placeholder.message')}
                   rows={5}
                 />
               </div>
@@ -208,7 +230,7 @@ export function Contact() {
                 className="w-full bg-blue-600 hover:bg-blue-700"
                 disabled={isSubmitting}
               >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
+                {isSubmitting ? t('contact.btn.sending') : t('contact.btn.send')}
                 <Send className="ml-2 w-4 h-4" />
               </Button>
             </form>

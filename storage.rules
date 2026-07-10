@@ -4,17 +4,17 @@ service firebase.storage {
     // Public folders for blog and portfolio assets
     match /blog/{allPaths=**} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'admin@graycodder.com';
+      allow write: if request.auth != null && (request.auth.token.email == 'admin@graycodder.com' || request.auth.token.email == 'graycodder@gmail.com');
     }
     match /portfolio/{allPaths=**} {
       allow read: if true;
-      allow write: if request.auth != null && request.auth.token.email == 'admin@graycodder.com';
+      allow write: if request.auth != null && (request.auth.token.email == 'admin@graycodder.com' || request.auth.token.email == 'graycodder@gmail.com');
     }
     
     // Default: require admin for anything else
     match /{allPaths=**} {
       allow read: if request.auth != null;
-      allow write: if request.auth != null && request.auth.token.email == 'admin@graycodder.com';
+      allow write: if request.auth != null && (request.auth.token.email == 'admin@graycodder.com' || request.auth.token.email == 'graycodder@gmail.com');
     }
   }
 }

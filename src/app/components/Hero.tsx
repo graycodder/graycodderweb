@@ -1,12 +1,15 @@
 import React from 'react';
 import { Button } from './ui/button';
 import { ArrowRight } from 'lucide-react';
+import { useTranslation } from '../../lib/i18n';
 
 interface HeroProps {
   onNavigate: (section: string) => void;
 }
 
 export function Hero({ onNavigate }: HeroProps) {
+  const { t } = useTranslation();
+
   return (
     <section id="home" className="relative pt-20 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,16 +17,15 @@ export function Hero({ onNavigate }: HeroProps) {
           {/* Text Content */}
           <div className="space-y-6">
             <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm">
-              14+ Years of Excellence in IT Industry
+              {t('hero.excellence')}
             </div>
             
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900">
-              Flourish with Us
+              {t('hero.title')}
             </h1>
             
             <p className="text-xl text-gray-600">
-              Transforming businesses with innovative technical solutions and ideas. 
-              We specialize in end-to-end website development and mobile application development.
+              {t('hero.description')}
             </p>
 
             <div className="flex flex-wrap gap-4">
@@ -32,7 +34,7 @@ export function Hero({ onNavigate }: HeroProps) {
                 onClick={() => onNavigate('services')}
                 className="bg-blue-600 hover:bg-blue-700"
               >
-                Our Services
+                {t('hero.servicesBtn')}
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Button>
               <Button 
@@ -40,23 +42,23 @@ export function Hero({ onNavigate }: HeroProps) {
                 variant="outline"
                 onClick={() => onNavigate('contact')}
               >
-                Get in Touch
+                {t('hero.contactBtn')}
               </Button>
             </div>
 
             {/* Stats */}
             <div className="grid grid-cols-3 gap-4 pt-8">
               <div>
-                <div className="text-3xl font-bold text-blue-600">14+</div>
-                <div className="text-sm text-gray-600">Years Experience</div>
+                <div className="text-3xl font-bold text-blue-600">{t('hero.experienceVal')}</div>
+                <div className="text-sm text-gray-600">{t('hero.experienceLabel')}</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-blue-600">100+</div>
-                <div className="text-sm text-gray-600">Projects Delivered</div>
+                <div className="text-3xl font-bold text-blue-600">{t('hero.projectsVal')}</div>
+                <div className="text-sm text-gray-600">{t('hero.projectsLabel')}</div>
               </div>
               <div>
-                <div className="text-3xl font-bold text-blue-600">50+</div>
-                <div className="text-sm text-gray-600">Happy Clients</div>
+                <div className="text-3xl font-bold text-blue-600">{t('hero.clientsVal')}</div>
+                <div className="text-sm text-gray-600">{t('hero.clientsLabel')}</div>
               </div>
             </div>
           </div>
