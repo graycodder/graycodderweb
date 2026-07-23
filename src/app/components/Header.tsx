@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Sparkles } from 'lucide-react';
 import { useTranslation, languages } from '../../lib/i18n';
 
 interface HeaderProps {
@@ -27,11 +27,20 @@ export function Header({ onNavigate }: HeaderProps) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <div 
-            className="flex items-center cursor-pointer"
+          <div
+            className="flex items-center space-x-2.5 cursor-pointer group"
             onClick={() => onNavigate('home')}
           >
-            <div className="text-2xl font-bold text-blue-600">Graycodder Business Consultants</div>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+              <Sparkles className="w-5 h-5 animate-pulse" />
+            </div>
+            <div className="flex flex-col">
+              <div className="flex items-center space-x-1.5 leading-none">
+                <span className="text-xl font-extrabold text-gray-900 tracking-tight">Graycodder</span>
+                <span className="text-xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">AI</span>
+              </div>
+              <span className="text-[10px] font-semibold tracking-wider text-blue-600 uppercase mt-0.5">Enterprise AI Solutions</span>
+            </div>
           </div>
 
           {/* Desktop Navigation */}
@@ -67,9 +76,8 @@ export function Header({ onNavigate }: HeaderProps) {
                           setLanguage(lang.code);
                           setLangDropdownOpen(false);
                         }}
-                        className={`flex items-center w-full px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors cursor-pointer ${
-                          language === lang.code ? 'text-blue-600 font-semibold bg-blue-50/50' : 'text-gray-700'
-                        }`}
+                        className={`flex items-center w-full px-4 py-2 text-left text-sm hover:bg-gray-100 transition-colors cursor-pointer ${language === lang.code ? 'text-blue-600 font-semibold bg-blue-50/50' : 'text-gray-700'
+                          }`}
                       >
                         <span className="mr-2">{lang.flag}</span>
                         <span>{lang.name}</span>
@@ -121,11 +129,10 @@ export function Header({ onNavigate }: HeaderProps) {
                       setLanguage(lang.code);
                       setMobileMenuOpen(false);
                     }}
-                    className={`flex items-center px-3 py-2 text-sm border rounded-md cursor-pointer ${
-                      language === lang.code 
-                        ? 'border-blue-600 bg-blue-50 text-blue-600 font-semibold' 
-                        : 'border-gray-200 text-gray-700 hover:bg-gray-50'
-                    }`}
+                    className={`flex items-center px-3 py-2 text-sm border rounded-md cursor-pointer ${language === lang.code
+                      ? 'border-blue-600 bg-blue-50 text-blue-600 font-semibold'
+                      : 'border-gray-200 text-gray-700 hover:bg-gray-50'
+                      }`}
                   >
                     <span className="mr-1.5">{lang.flag}</span>
                     <span>{lang.name}</span>

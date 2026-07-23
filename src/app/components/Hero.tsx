@@ -65,16 +65,26 @@ export function Hero({ onNavigate }: HeroProps) {
 
           {/* Image */}
           <div className="relative">
-            <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl">
+            <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl border border-blue-500/20">
               <img
-                src="https://images.unsplash.com/photo-1627599936744-51d288f89af4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMHRlYW0lMjB3b3Jrc3BhY2V8ZW58MXx8fHwxNzcwNDE5MzA5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                alt="Web Development Team"
-                className="w-full h-full object-cover"
+                src="/ai_enterprise_hero.png"
+                alt="Enterprise AI Operations & Business Automation"
+                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
               />
             </div>
-            {/* Decorative elements */}
-            <div className="absolute -top-4 -right-4 w-24 h-24 bg-blue-600 rounded-full opacity-20 blur-2xl"></div>
-            <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-indigo-600 rounded-full opacity-20 blur-2xl"></div>
+            {/* Floating AI Badge Overlay */}
+            <div className="absolute -bottom-5 -left-5 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-gray-100/80 flex items-center space-x-3 hidden.sm:flex">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-black text-lg shadow-md shadow-blue-500/30">
+                AI
+              </div>
+              <div>
+                <div className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">Enterprise Partner</div>
+                <div className="text-sm font-extrabold text-gray-900">100% Business Automation</div>
+              </div>
+            </div>
+            {/* Decorative Glow elements */}
+            <div className="absolute -top-6 -right-6 w-28 h-28 bg-blue-600 rounded-full opacity-25 blur-2xl pointer-events-none"></div>
+            <div className="absolute -bottom-6 -left-6 w-36 h-36 bg-indigo-600 rounded-full opacity-25 blur-2xl pointer-events-none"></div>
           </div>
         </div>
       </div>

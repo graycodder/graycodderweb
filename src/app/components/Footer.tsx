@@ -1,5 +1,5 @@
 import React from 'react';
-import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'lucide-react';
+import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, Sparkles } from 'lucide-react';
 import { useTranslation } from '../../lib/i18n';
 
 interface FooterProps {
@@ -16,7 +16,15 @@ export function Footer({ onAdminClick }: FooterProps) {
         <div className="grid md:grid-cols-4 gap-8 mb-8">
           {/* Company Info */}
           <div className="md:col-span-2">
-            <h3 className="text-2xl font-bold mb-4">Graycodder</h3>
+            <div className="flex items-center space-x-2.5 mb-4">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+                <Sparkles className="w-4 h-4" />
+              </div>
+              <div className="flex items-center space-x-1.5 leading-none">
+                <span className="text-2xl font-extrabold text-white tracking-tight">Graycodder</span>
+                <span className="text-2xl font-extrabold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">AI</span>
+              </div>
+            </div>
             <p className="text-gray-400 mb-4">
               {t('footer.description')}
             </p>
