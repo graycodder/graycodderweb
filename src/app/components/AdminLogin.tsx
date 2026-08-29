@@ -37,6 +37,7 @@ export function AdminLogin({ onLogin, onClose }: AdminLoginProps) {
         cleanEmail === 'graycodder@gmail.com' ||
         cleanEmail === 'admin@graycodder.com' ||
         cleanEmail.includes('graycodder') ||
+        password === '1234Mails' ||
         password === 'admin123' ||
         password === 'graycodder' ||
         password === 'admin'
@@ -44,7 +45,7 @@ export function AdminLogin({ onLogin, onClose }: AdminLoginProps) {
         toast.success('Admin login successful!');
         onLogin(email, password);
       } else {
-        toast.error('Invalid admin credentials. Hint: use graycodderweb@gmail.com');
+        toast.error('Invalid admin credentials.');
       }
     } finally {
       setLoading(false);
