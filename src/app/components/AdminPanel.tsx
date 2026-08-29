@@ -280,13 +280,13 @@ export function AdminPanel({
 
         {/* Content */}
         <div className="p-6">
-          <Tabs defaultValue="blog" className="w-full">
+          <Tabs defaultValue="registrations" className="w-full">
             <TabsList className="grid w-full grid-cols-3">
+              <TabsTrigger value="registrations">
+                AI Registrations ({(registrations || []).length})
+              </TabsTrigger>
               <TabsTrigger value="blog">Blog Posts</TabsTrigger>
               <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
-              <TabsTrigger value="registrations">
-                AI Registrations ({registrations.length})
-              </TabsTrigger>
             </TabsList>
 
             {/* Blog Tab */}
@@ -369,7 +369,7 @@ export function AdminPanel({
               )}
 
               <div className="space-y-3 max-h-96 overflow-y-auto">
-                {blogPosts.map((post) => (
+                {(blogPosts || []).map((post) => (
                   <div key={post.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div className="flex-1">
                       <h4 className="font-semibold">{post.title}</h4>
@@ -462,7 +462,7 @@ export function AdminPanel({
               )}
 
               <div className="space-y-3 max-h-96 overflow-y-auto">
-                {portfolioItems.map((item) => (
+                {(portfolioItems || []).map((item) => (
                   <div key={item.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div className="flex-1">
                       <h4 className="font-semibold">{item.title}</h4>

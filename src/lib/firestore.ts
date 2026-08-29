@@ -181,7 +181,18 @@ export const getRegistrations = async (): Promise<CourseRegistration[]> => {
             } as CourseRegistration));
         }
     } catch (error) {
-        console.error("Error fetching registrations:", error);
+        console.warn("Ordered registrations query failed, trying unordered query fallback:", error);
+        try {
+            const querySnapshot = await getDocs(collection(db, REGISTRATIONS_COLLECTION));
+            if (!querySnapshot.empty) {
+                return querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                } as CourseRegistration)).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+            }
+        } catch (innerError) {
+            console.error("Error fetching registrations fallback:", innerError);
+        }
     }
     return [];
 };
