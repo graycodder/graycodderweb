@@ -23,6 +23,7 @@ const en = {
   "nav.services": "Services",
   "nav.portfolio": "Portfolio",
   "nav.blog": "Blog",
+  "nav.aiTraining": "AI Training",
   "nav.contact": "Contact",
   "nav.admin": "Admin",
 
@@ -139,6 +140,25 @@ const en = {
   "contact.toast.success": "Thank you! We will get back to you soon.",
   "contact.toast.wrong": "Something went wrong. Please try again.",
   "contact.toast.error": "An error occurred. Please try again later.",
+
+  // AI Course Registration Section
+  "course.tabGeneral": "General Inquiry",
+  "course.tabRegister": "AI Training Registration",
+  "course.badge": "Official Company AI Training",
+  "course.title": "Graycodder AI Consultants Certified \"A Stack\" Certificate",
+  "course.subtitle": "Empowering graduates of any stream with foundational AI & Full-Stack capabilities. Top talents earn our prestigious certified AI Consultant certificate!",
+  "course.openFor": "Open for Graduates of ANY Stream (B.Tech, B.Sc, B.Com, B.A, BCA, MBA, MCA, etc.)",
+  "course.label.stream": "Degree / Stream *",
+  "course.placeholder.stream": "e.g. B.Tech, B.Com, B.Sc, BCA, MBA",
+  "course.label.status": "Graduation Status / Year *",
+  "course.placeholder.status": "e.g. 2024 Graduate, Final Year Student",
+  "course.label.motivation": "Why do you want to join this AI Course? *",
+  "course.placeholder.motivation": "Tell us about your background and why you want to earn the Graycodder AI Consultant Certificate...",
+  "course.btn.register": "Submit AI Registration",
+  "course.btn.registering": "Submitting Registration...",
+  "course.btn.copyLink": "Copy Social Registration Link",
+  "course.linkCopied": "Direct registration link copied to clipboard!",
+  "course.toastSuccess": "Registration submitted successfully! Our AI team will contact you shortly.",
 
   // Footer Section
   "footer.desc": "Flourish with Us - Empowering businesses with innovative technical solutions and ideas. 14+ years of excellence in IT industry.",

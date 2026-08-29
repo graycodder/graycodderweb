@@ -37,38 +37,64 @@ export interface PortfolioItem {
     createdAt: string; // ISO string
 }
 
+export interface CourseRegistration {
+    id: string;
+    name: string;
+    email: string;
+    phone: string;
+    stream: string;
+    graduationStatus: string;
+    message: string;
+    courseName: string;
+    createdAt: string; // ISO string
+}
+
 // Collection References
 const BLOG_COLLECTION = 'blog';
 const PORTFOLIO_COLLECTION = 'portfolio';
+const REGISTRATIONS_COLLECTION = 'registrations';
 
 // Fetch Functions
 export const getBlogs = async (): Promise<BlogPost[]> => {
     try {
         const q = query(collection(db, BLOG_COLLECTION), orderBy('createdAt', 'desc'));
         const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        } as BlogPost));
+        if (!querySnapshot.empty) {
+            return querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            } as BlogPost));
+        }
     } catch (error) {
         console.error("Error fetching blogs:", error);
-        return [];
     }
+    // Fallback to local json data if firestore is empty or errored
+    return Object.entries(firebaseData.blog || {}).map(([id, item]) => ({
+        id,
+        ...(item as any)
+    }));
 };
 
 export const getPortfolioItems = async (): Promise<PortfolioItem[]> => {
     try {
         const q = query(collection(db, PORTFOLIO_COLLECTION), orderBy('createdAt', 'desc'));
         const querySnapshot = await getDocs(q);
-        return querySnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-        } as PortfolioItem));
+        if (!querySnapshot.empty) {
+            return querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            } as BlogPost as any));
+        }
     } catch (error) {
         console.error("Error fetching portfolio items:", error);
-        return [];
     }
+    // Fallback to local json data if firestore is empty or errored
+    return Object.entries(firebaseData.portfolio || {}).map(([id, item]) => ({
+        id,
+        ...(item as any)
+    }));
 };
+
 
 // CRUD Operations for Blog
 export const addBlogPost = async (post: Omit<BlogPost, 'id'>) => {
@@ -128,6 +154,43 @@ export const deletePortfolioItem = async (id: string) => {
         await deleteDoc(docRef);
     } catch (error) {
         console.error("Error deleting portfolio item:", error);
+        throw error;
+    }
+};
+
+// CRUD Operations for Course Registrations
+export const addRegistration = async (registration: Omit<CourseRegistration, 'id'>) => {
+    try {
+        const docRef = await addDoc(collection(db, REGISTRATIONS_COLLECTION), registration);
+        return docRef.id;
+    } catch (error) {
+        console.error("Error adding course registration:", error);
+        throw error;
+    }
+};
+
+export const getRegistrations = async (): Promise<CourseRegistration[]> => {
+    try {
+        const q = query(collection(db, REGISTRATIONS_COLLECTION), orderBy('createdAt', 'desc'));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            return querySnapshot.docs.map(doc => ({
+                id: doc.id,
+                ...doc.data()
+            } as CourseRegistration));
+        }
+    } catch (error) {
+        console.error("Error fetching registrations:", error);
+    }
+    return [];
+};
+
+export const deleteRegistration = async (id: string) => {
+    try {
+        const docRef = doc(db, REGISTRATIONS_COLLECTION, id);
+        await deleteDoc(docRef);
+    } catch (error) {
+        console.error("Error deleting registration:", error);
         throw error;
     }
 };

@@ -19,6 +19,7 @@ export function Header({ onNavigate }: HeaderProps) {
     { label: t('nav.services'), section: 'services' },
     { label: t('nav.portfolio'), section: 'portfolio' },
     { label: t('nav.blog'), section: 'blog' },
+    { label: t('nav.aiTraining') || 'AI Training', section: 'register' },
     { label: t('nav.contact'), section: 'contact' },
   ];
 

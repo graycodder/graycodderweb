@@ -22,8 +22,18 @@ export default function App() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [contactTab, setContactTab] = useState<'general' | 'course'>('general');
 
   const handleNavigate = (section: string) => {
+    if (section === 'register' || section === 'ai-training') {
+      setContactTab('course');
+      const element = document.getElementById('register') || document.getElementById('contact');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+
     const element = document.getElementById(section);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
@@ -72,7 +82,28 @@ export default function App() {
 
     fetchAllData();
 
-    return () => unsubscribe();
+    // Check URL Hash or Search Params for direct registration link (social media share link)
+    const checkRegistrationRoute = () => {
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      if (hash === '#register' || hash === '#ai-training' || hash === '#course' || search.includes('register')) {
+        setContactTab('course');
+        setTimeout(() => {
+          const element = document.getElementById('register') || document.getElementById('contact');
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 300);
+      }
+    };
+
+    checkRegistrationRoute();
+    window.addEventListener('hashchange', checkRegistrationRoute);
+
+    return () => {
+      unsubscribe();
+      window.removeEventListener('hashchange', checkRegistrationRoute);
+    };
   }, []);
 
   return (
@@ -88,7 +119,11 @@ export default function App() {
           <Services />
           <Portfolio />
           <Blog />
-          <Contact onAdminClick={handleAdminClick} />
+          <Contact 
+            onAdminClick={handleAdminClick} 
+            activeTab={contactTab}
+            onTabChange={(tab) => setContactTab(tab)}
+          />
         </main>
 
         <Footer onAdminClick={handleAdminClick} />

@@ -8,12 +8,15 @@ import { toast } from 'sonner';
 import {
   BlogPost,
   PortfolioItem,
+  CourseRegistration,
   addBlogPost,
   updateBlogPost,
   deleteBlogPost,
   addPortfolioItem,
   updatePortfolioItem,
-  deletePortfolioItem
+  deletePortfolioItem,
+  getRegistrations,
+  deleteRegistration
 } from '../../lib/firestore';
 
 interface AdminPanelProps {
@@ -32,9 +35,36 @@ export function AdminPanel({
   onRefresh,
 }: AdminPanelProps) {
   const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
-  const [editingPortfolio, setEditingPortfolio] = useState<PortfolioItem | null>(null);
-  const [isAddingBlog, setIsAddingBlog] = useState(false);
-  const [isAddingPortfolio, setIsAddingPortfolio] = useState(false);
+  const [registrations, setRegistrations] = useState<CourseRegistration[]>([]);
+  const [loadingRegistrations, setLoadingRegistrations] = useState(false);
+
+  const fetchRegistrations = async () => {
+    setLoadingRegistrations(true);
+    try {
+      const data = await getRegistrations();
+      setRegistrations(data);
+    } catch (err) {
+      console.error("Error fetching registrations:", err);
+    } finally {
+      setLoadingRegistrations(false);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchRegistrations();
+  }, []);
+
+  const handleDeleteReg = async (id: string) => {
+    if (confirm('Are you sure you want to delete this course registration?')) {
+      try {
+        await deleteRegistration(id);
+        toast.success('Registration deleted successfully');
+        fetchRegistrations();
+      } catch (err) {
+        toast.error('Failed to delete registration');
+      }
+    }
+  };
 
   // Blog form state
   const [blogForm, setBlogForm] = useState<Partial<BlogPost>>({
@@ -197,9 +227,12 @@ export function AdminPanel({
         {/* Content */}
         <div className="p-6">
           <Tabs defaultValue="blog" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="blog">Blog Posts</TabsTrigger>
               <TabsTrigger value="portfolio">Portfolio</TabsTrigger>
+              <TabsTrigger value="registrations">
+                AI Registrations ({registrations.length})
+              </TabsTrigger>
             </TabsList>
 
             {/* Blog Tab */}
@@ -394,6 +427,63 @@ export function AdminPanel({
                   </div>
                 ))}
               </div>
+            </TabsContent>
+
+            {/* AI Course Registrations Tab */}
+            <TabsContent value="registrations" className="space-y-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-lg font-semibold">Course Applicants</h3>
+                  <p className="text-sm text-gray-500">Graycodder AI Consultants Certified "A Stack" Certificate Registrations</p>
+                </div>
+                <Button variant="outline" size="sm" onClick={fetchRegistrations} disabled={loadingRegistrations}>
+                  {loadingRegistrations ? 'Refreshing...' : 'Refresh List'}
+                </Button>
+              </div>
+
+              {registrations.length === 0 ? (
+                <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
+                  <p className="text-gray-500 font-medium">No registrations received yet.</p>
+                  <p className="text-xs text-gray-400 mt-1">Share the registration link on social media to receive applications!</p>
+                </div>
+              ) : (
+                <div className="space-y-3 max-h-96 overflow-y-auto">
+                  {registrations.map((reg) => (
+                    <div key={reg.id} className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
+                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-2">
+                        <div>
+                          <span className="font-bold text-gray-900 text-base">{reg.name}</span>
+                          <span className="ml-2 px-2.5 py-0.5 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                            {reg.stream || 'Graduate'}
+                          </span>
+                          <span className="ml-2 px-2.5 py-0.5 bg-amber-100 text-amber-800 text-xs font-semibold rounded-full">
+                            {reg.graduationStatus || 'N/A'}
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-gray-400">
+                            {reg.createdAt ? new Date(reg.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
+                          </span>
+                          <Button variant="outline" size="sm" onClick={() => handleDeleteReg(reg.id)}>
+                            <Trash2 className="w-4 h-4 text-red-600" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-600 mb-2">
+                        <div>📧 <strong>Email:</strong> <a href={`mailto:${reg.email}`} className="text-blue-600 underline">{reg.email}</a></div>
+                        <div>📞 <strong>Phone/WhatsApp:</strong> <a href={`tel:${reg.phone}`} className="text-blue-600 underline">{reg.phone}</a></div>
+                      </div>
+
+                      {reg.message && (
+                        <div className="mt-2 text-xs text-gray-700 bg-white p-2.5 rounded border border-gray-200">
+                          <strong className="text-gray-900">Motivation / Note:</strong> {reg.message}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </TabsContent>
           </Tabs>
         </div>
