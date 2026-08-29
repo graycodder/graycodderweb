@@ -36,6 +36,9 @@ export function AdminPanel({
   onRefresh,
 }: AdminPanelProps) {
   const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
+  const [editingPortfolio, setEditingPortfolio] = useState<PortfolioItem | null>(null);
+  const [isAddingBlog, setIsAddingBlog] = useState(false);
+  const [isAddingPortfolio, setIsAddingPortfolio] = useState(false);
   const [registrations, setRegistrations] = useState<CourseRegistration[]>([]);
   const [loadingRegistrations, setLoadingRegistrations] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');

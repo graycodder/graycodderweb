@@ -26,7 +26,7 @@ export function Footer({ onAdminClick }: FooterProps) {
               </div>
             </div>
             <p className="text-gray-400 mb-4">
-              {t('footer.description')}
+              {t('footer.desc') || t('footer.description')}
             </p>
             <div className="flex space-x-4">
               <a href="#" className="text-gray-400 hover:text-white transition-colors">
@@ -46,7 +46,7 @@ export function Footer({ onAdminClick }: FooterProps) {
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-semibold mb-4">{t('footer.linksTitle')}</h4>
+            <h4 className="font-semibold mb-4">{t('footer.quickLinks') || t('footer.linksTitle') || 'Quick Links'}</h4>
             <ul className="space-y-2 text-gray-400">
               <li>
                 <a href="#home" className="hover:text-white transition-colors">
@@ -83,7 +83,7 @@ export function Footer({ onAdminClick }: FooterProps) {
 
           {/* Contact Info */}
           <div>
-            <h4 className="font-semibold mb-4">{t('footer.contactTitle')}</h4>
+            <h4 className="font-semibold mb-4">{t('footer.contact') || t('footer.contactTitle') || 'Contact'}</h4>
             <ul className="space-y-3 text-gray-400">
               <li className="flex items-start">
                 <MapPin className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
