@@ -82,11 +82,13 @@ export default function App() {
 
     fetchAllData();
 
-    // Check URL Hash or Search Params for direct registration link (social media share link)
+    // Check URL Hash or Search Params for direct registration link or admin link
     const checkRegistrationRoute = () => {
       const hash = window.location.hash.toLowerCase();
       const search = window.location.search.toLowerCase();
-      if (hash === '#register' || hash === '#ai-training' || hash === '#course' || search.includes('register')) {
+      if (hash === '#admin' || search.includes('admin=true')) {
+        setShowAdminLogin(true);
+      } else if (hash === '#register' || hash === '#ai-training' || hash === '#course' || search.includes('register')) {
         setContactTab('course');
         setTimeout(() => {
           const element = document.getElementById('register') || document.getElementById('contact');

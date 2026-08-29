@@ -46,6 +46,7 @@ export interface CourseRegistration {
     graduationStatus: string;
     message: string;
     courseName: string;
+    status?: 'Pending' | 'Shortlisted' | 'Selected' | 'Contacted' | 'Rejected';
     createdAt: string; // ISO string
 }
 
@@ -191,6 +192,16 @@ export const deleteRegistration = async (id: string) => {
         await deleteDoc(docRef);
     } catch (error) {
         console.error("Error deleting registration:", error);
+        throw error;
+    }
+};
+
+export const updateRegistrationStatus = async (id: string, status: 'Pending' | 'Shortlisted' | 'Selected' | 'Contacted' | 'Rejected') => {
+    try {
+        const docRef = doc(db, REGISTRATIONS_COLLECTION, id);
+        await updateDoc(docRef, { status });
+    } catch (error) {
+        console.error("Error updating registration status:", error);
         throw error;
     }
 };

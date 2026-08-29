@@ -3,7 +3,7 @@ import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
-import { X, Plus, Edit, Trash2, LogOut } from 'lucide-react';
+import { X, Plus, Edit, Trash2, LogOut, Download, Search, MessageSquare, CheckCircle, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   BlogPost,
@@ -16,7 +16,8 @@ import {
   updatePortfolioItem,
   deletePortfolioItem,
   getRegistrations,
-  deleteRegistration
+  deleteRegistration,
+  updateRegistrationStatus
 } from '../../lib/firestore';
 
 interface AdminPanelProps {
@@ -37,6 +38,7 @@ export function AdminPanel({
   const [editingBlog, setEditingBlog] = useState<BlogPost | null>(null);
   const [registrations, setRegistrations] = useState<CourseRegistration[]>([]);
   const [loadingRegistrations, setLoadingRegistrations] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const fetchRegistrations = async () => {
     setLoadingRegistrations(true);
@@ -65,6 +67,58 @@ export function AdminPanel({
       }
     }
   };
+
+  const handleStatusChange = async (id: string, status: any) => {
+    try {
+      await updateRegistrationStatus(id, status);
+      toast.success(`Applicant status updated to ${status}`);
+      setRegistrations(prev => prev.map(r => r.id === id ? { ...r, status } : r));
+    } catch (err) {
+      toast.error('Failed to update status');
+    }
+  };
+
+  const handleExportCSV = () => {
+    if (registrations.length === 0) {
+      toast.error('No registrations to export');
+      return;
+    }
+
+    const headers = ['ID', 'Name', 'Email', 'Phone', 'Stream/Degree', 'Graduation Status/Year', 'Status', 'Motivation/Note', 'Date Submitted'];
+    const rows = registrations.map(r => [
+      `"${r.id}"`,
+      `"${r.name?.replace(/"/g, '""') || ''}"`,
+      `"${r.email?.replace(/"/g, '""') || ''}"`,
+      `"${r.phone?.replace(/"/g, '""') || ''}"`,
+      `"${r.stream?.replace(/"/g, '""') || ''}"`,
+      `"${r.graduationStatus?.replace(/"/g, '""') || ''}"`,
+      `"${r.status || 'Pending'}"`,
+      `"${r.message?.replace(/"/g, '""') || ''}"`,
+      `"${r.createdAt || ''}"`
+    ]);
+
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `graycodder_ai_course_registrations_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success('Course registrations exported to CSV!');
+  };
+
+  const filteredRegistrations = registrations.filter(r => {
+    const q = searchQuery.toLowerCase().trim();
+    if (!q) return true;
+    return (
+      r.name?.toLowerCase().includes(q) ||
+      r.email?.toLowerCase().includes(q) ||
+      r.phone?.toLowerCase().includes(q) ||
+      r.stream?.toLowerCase().includes(q) ||
+      r.graduationStatus?.toLowerCase().includes(q)
+    );
+  });
 
   // Blog form state
   const [blogForm, setBlogForm] = useState<Partial<BlogPost>>({
@@ -431,57 +485,134 @@ export function AdminPanel({
 
             {/* AI Course Registrations Tab */}
             <TabsContent value="registrations" className="space-y-4">
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
                 <div>
-                  <h3 className="text-lg font-semibold">Course Applicants</h3>
-                  <p className="text-sm text-gray-500">Graycodder AI Consultants Certified "A Stack" Certificate Registrations</p>
+                  <h3 className="text-lg font-bold text-gray-900">Course Applicants</h3>
+                  <p className="text-xs text-gray-500">Graycodder AI Consultants Certified "A Stack" Certificate Applications ({filteredRegistrations.length})</p>
                 </div>
-                <Button variant="outline" size="sm" onClick={fetchRegistrations} disabled={loadingRegistrations}>
-                  {loadingRegistrations ? 'Refreshing...' : 'Refresh List'}
-                </Button>
+
+                <div className="flex flex-wrap items-center gap-2">
+                  <div className="relative">
+                    <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Input
+                      type="text"
+                      placeholder="Search candidate..."
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-9 text-xs w-48 bg-white"
+                    />
+                  </div>
+
+                  <Button variant="outline" size="sm" onClick={handleExportCSV} className="text-xs bg-white">
+                    <Download className="w-3.5 h-3.5 mr-1 text-emerald-600" />
+                    Export CSV
+                  </Button>
+
+                  <Button variant="outline" size="sm" onClick={fetchRegistrations} disabled={loadingRegistrations} className="text-xs bg-white">
+                    <RefreshCw className={`w-3.5 h-3.5 mr-1 ${loadingRegistrations ? 'animate-spin' : ''}`} />
+                    Refresh
+                  </Button>
+                </div>
               </div>
 
-              {registrations.length === 0 ? (
-                <div className="text-center py-12 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                  <p className="text-gray-500 font-medium">No registrations received yet.</p>
-                  <p className="text-xs text-gray-400 mt-1">Share the registration link on social media to receive applications!</p>
+              {filteredRegistrations.length === 0 ? (
+                <div className="text-center py-12 bg-gray-50 rounded-xl border border-dashed border-gray-300">
+                  <p className="text-gray-600 font-semibold">No candidate registrations found.</p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    {searchQuery ? 'Try clearing your search query.' : 'Share your social media registration link (https://aycodderweb.web.app/#register) to receive candidate applications!'}
+                  </p>
                 </div>
               ) : (
-                <div className="space-y-3 max-h-96 overflow-y-auto">
-                  {registrations.map((reg) => (
-                    <div key={reg.id} className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-blue-300 transition-colors">
-                      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-2">
-                        <div>
-                          <span className="font-bold text-gray-900 text-base">{reg.name}</span>
-                          <span className="ml-2 px-2.5 py-0.5 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
-                            {reg.stream || 'Graduate'}
-                          </span>
-                          <span className="ml-2 px-2.5 py-0.5 bg-amber-100 text-amber-800 text-xs font-semibold rounded-full">
-                            {reg.graduationStatus || 'N/A'}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span className="text-xs text-gray-400">
-                            {reg.createdAt ? new Date(reg.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : ''}
-                          </span>
-                          <Button variant="outline" size="sm" onClick={() => handleDeleteReg(reg.id)}>
-                            <Trash2 className="w-4 h-4 text-red-600" />
-                          </Button>
-                        </div>
-                      </div>
+                <div className="space-y-3 max-h-96 overflow-y-auto pr-1">
+                  {filteredRegistrations.map((reg) => {
+                    const cleanPhone = reg.phone ? reg.phone.replace(/[^0-9]/g, '') : '';
+                    const whatsappLink = cleanPhone ? `https://wa.me/${cleanPhone}` : null;
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-600 mb-2">
-                        <div>📧 <strong>Email:</strong> <a href={`mailto:${reg.email}`} className="text-blue-600 underline">{reg.email}</a></div>
-                        <div>📞 <strong>Phone/WhatsApp:</strong> <a href={`tel:${reg.phone}`} className="text-blue-600 underline">{reg.phone}</a></div>
-                      </div>
+                    return (
+                      <div key={reg.id} className="p-4 bg-white rounded-xl border border-gray-200 hover:border-blue-300 shadow-sm transition-all space-y-3">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                          <div className="space-y-1">
+                            <div className="flex items-center space-x-2">
+                              <span className="font-bold text-gray-900 text-base">{reg.name}</span>
+                              <span className="px-2.5 py-0.5 bg-blue-100 text-blue-800 text-xs font-semibold rounded-full">
+                                {reg.stream || 'Graduate'}
+                              </span>
+                              <span className="px-2.5 py-0.5 bg-purple-100 text-purple-800 text-xs font-semibold rounded-full">
+                                {reg.graduationStatus || 'Graduate'}
+                              </span>
+                            </div>
+                            <div className="text-xs text-gray-500">
+                              Applied: {reg.createdAt ? new Date(reg.createdAt).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : 'Recently'}
+                            </div>
+                          </div>
 
-                      {reg.message && (
-                        <div className="mt-2 text-xs text-gray-700 bg-white p-2.5 rounded border border-gray-200">
-                          <strong className="text-gray-900">Motivation / Note:</strong> {reg.message}
+                          <div className="flex items-center gap-2">
+                            {/* Candidate Status Selector */}
+                            <select
+                              value={reg.status || 'Pending'}
+                              onChange={(e) => handleStatusChange(reg.id, e.target.value)}
+                              className={`text-xs font-semibold px-2.5 py-1.5 rounded-lg border cursor-pointer ${
+                                reg.status === 'Selected' ? 'bg-emerald-50 text-emerald-700 border-emerald-300' :
+                                reg.status === 'Shortlisted' ? 'bg-blue-50 text-blue-700 border-blue-300' :
+                                reg.status === 'Contacted' ? 'bg-amber-50 text-amber-700 border-amber-300' :
+                                reg.status === 'Rejected' ? 'bg-red-50 text-red-700 border-red-300' :
+                                'bg-gray-50 text-gray-700 border-gray-300'
+                              }`}
+                            >
+                              <option value="Pending">🟡 Pending</option>
+                              <option value="Shortlisted">🟦 Shortlisted</option>
+                              <option value="Contacted">📙 Contacted</option>
+                              <option value="Selected">🟢 Selected / Certified</option>
+                              <option value="Rejected">🔴 Rejected</option>
+                            </select>
+
+                            <Button variant="outline" size="sm" onClick={() => handleDeleteReg(reg.id)} title="Delete Application">
+                              <Trash2 className="w-4 h-4 text-red-600" />
+                            </Button>
+                          </div>
                         </div>
-                      )}
-                    </div>
-                  ))}
+
+                        {/* Contact details & action links */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs bg-gray-50 p-3 rounded-lg border border-gray-100">
+                          <div className="flex items-center space-x-2">
+                            <span className="font-semibold text-gray-700">Email:</span>
+                            <a href={`mailto:${reg.email}`} className="text-blue-600 hover:underline font-medium flex items-center">
+                              {reg.email}
+                            </a>
+                          </div>
+
+                          <div className="flex items-center space-x-3">
+                            <div className="flex items-center space-x-1">
+                              <span className="font-semibold text-gray-700">Phone:</span>
+                              <a href={`tel:${reg.phone}`} className="text-blue-600 hover:underline font-medium">
+                                {reg.phone}
+                              </a>
+                            </div>
+
+                            {whatsappLink && (
+                              <a
+                                href={whatsappLink}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="px-2 py-0.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded font-medium inline-flex items-center text-[10px]"
+                              >
+                                <MessageSquare className="w-3 h-3 mr-1" />
+                                WhatsApp
+                              </a>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Candidate motivation statement */}
+                        {reg.message && (
+                          <div className="text-xs text-gray-700 bg-blue-50/50 p-3 rounded-lg border border-blue-100">
+                            <strong className="text-blue-900 block mb-1">Candidate Motivation & Background:</strong>
+                            <p className="whitespace-pre-wrap text-gray-800 leading-relaxed">{reg.message}</p>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </TabsContent>

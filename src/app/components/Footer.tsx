@@ -73,6 +73,11 @@ export function Footer({ onAdminClick }: FooterProps) {
                   {t('nav.blog')}
                 </a>
               </li>
+              <li>
+                <button onClick={onAdminClick} className="hover:text-white transition-colors cursor-pointer text-left">
+                  Admin Panel
+                </button>
+              </li>
             </ul>
           </div>
 
