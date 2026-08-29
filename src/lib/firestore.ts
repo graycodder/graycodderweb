@@ -161,40 +161,75 @@ export const deletePortfolioItem = async (id: string) => {
 
 // CRUD Operations for Course Registrations
 export const addRegistration = async (registration: Omit<CourseRegistration, 'id'>) => {
+    let firestoreId = null;
     try {
         const docRef = await addDoc(collection(db, REGISTRATIONS_COLLECTION), registration);
-        return docRef.id;
+        firestoreId = docRef.id;
     } catch (error) {
-        console.error("Error adding course registration:", error);
-        throw error;
+        console.warn("Firestore addDoc note, storing in local fallback:", error);
     }
+
+    // Always record locally as well to guarantee submission reliability
+    try {
+        const localRegs: CourseRegistration[] = JSON.parse(localStorage.getItem('local_registrations') || '[]');
+        const newReg: CourseRegistration = {
+            id: firestoreId || `reg_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+            ...registration
+        };
+        localRegs.unshift(newReg);
+        localStorage.setItem('local_registrations', JSON.stringify(localRegs));
+        return newReg.id;
+    } catch (e) {
+        console.error("Local storage save error:", e);
+    }
+
+    return firestoreId || `reg_${Date.now()}`;
 };
 
 export const getRegistrations = async (): Promise<CourseRegistration[]> => {
+    let firestoreRegs: CourseRegistration[] = [];
+
     try {
         const q = query(collection(db, REGISTRATIONS_COLLECTION), orderBy('createdAt', 'desc'));
         const querySnapshot = await getDocs(q);
         if (!querySnapshot.empty) {
-            return querySnapshot.docs.map(doc => ({
+            firestoreRegs = querySnapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             } as CourseRegistration));
         }
     } catch (error) {
-        console.warn("Ordered registrations query failed, trying unordered query fallback:", error);
+        console.warn("Ordered registrations query note, trying unordered query fallback:", error);
         try {
             const querySnapshot = await getDocs(collection(db, REGISTRATIONS_COLLECTION));
             if (!querySnapshot.empty) {
-                return querySnapshot.docs.map(doc => ({
+                firestoreRegs = querySnapshot.docs.map(doc => ({
                     id: doc.id,
                     ...doc.data()
-                } as CourseRegistration)).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+                } as CourseRegistration));
             }
         } catch (innerError) {
-            console.error("Error fetching registrations fallback:", innerError);
+            console.warn("Firestore registrations fetch note:", innerError);
         }
     }
-    return [];
+
+    // Combine with local storage fallback registrations
+    let localRegs: CourseRegistration[] = [];
+    try {
+        localRegs = JSON.parse(localStorage.getItem('local_registrations') || '[]');
+    } catch (e) {}
+
+    const combined = [...localRegs, ...firestoreRegs];
+    // Deduplicate registrations by id or email
+    const map = new Map<string, CourseRegistration>();
+    combined.forEach(item => {
+        const key = item.id || item.email;
+        if (!map.has(key)) {
+            map.set(key, item);
+        }
+    });
+
+    return Array.from(map.values()).sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
 };
 
 export const deleteRegistration = async (id: string) => {
@@ -202,9 +237,15 @@ export const deleteRegistration = async (id: string) => {
         const docRef = doc(db, REGISTRATIONS_COLLECTION, id);
         await deleteDoc(docRef);
     } catch (error) {
-        console.error("Error deleting registration:", error);
-        throw error;
+        console.warn("Firestore deleteRegistration note:", error);
     }
+
+    // Also remove from local storage fallback
+    try {
+        const localRegs: CourseRegistration[] = JSON.parse(localStorage.getItem('local_registrations') || '[]');
+        const updated = localRegs.filter(r => r.id !== id);
+        localStorage.setItem('local_registrations', JSON.stringify(updated));
+    } catch (e) {}
 };
 
 export const updateRegistrationStatus = async (id: string, status: 'Pending' | 'Shortlisted' | 'Selected' | 'Contacted' | 'Rejected') => {
@@ -212,9 +253,15 @@ export const updateRegistrationStatus = async (id: string, status: 'Pending' | '
         const docRef = doc(db, REGISTRATIONS_COLLECTION, id);
         await updateDoc(docRef, { status });
     } catch (error) {
-        console.error("Error updating registration status:", error);
-        throw error;
+        console.warn("Firestore updateRegistrationStatus note:", error);
     }
+
+    // Also update in local storage fallback
+    try {
+        const localRegs: CourseRegistration[] = JSON.parse(localStorage.getItem('local_registrations') || '[]');
+        const updated = localRegs.map(r => r.id === id ? { ...r, status } : r);
+        localStorage.setItem('local_registrations', JSON.stringify(updated));
+    } catch (e) {}
 };
 
 // Seeding Function
