@@ -1,91 +1,128 @@
-import React from 'react';
-import { Button } from './ui/button';
-import { ArrowRight } from 'lucide-react';
-import { useTranslation } from '../../lib/i18n';
+import React, { useEffect, useRef } from 'react';
+import { ArrowRight, Cpu, Zap, Shield } from 'lucide-react';
 
 interface HeroProps {
   onNavigate: (section: string) => void;
 }
 
 export function Hero({ onNavigate }: HeroProps) {
-  const { t } = useTranslation();
+  const badgeRef = useRef<HTMLSpanElement>(null);
+  const h1Ref = useRef<HTMLHeadingElement>(null);
+  const pRef = useRef<HTMLParagraphElement>(null);
+  const ctaRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const els = [badgeRef, h1Ref, pRef, ctaRef, statsRef];
+    els.forEach((ref, i) => {
+      if (ref.current) {
+        ref.current.style.opacity = '0';
+        ref.current.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+          if (ref.current) {
+            ref.current.style.transition = 'opacity 0.7s ease, transform 0.7s ease';
+            ref.current.style.opacity = '1';
+            ref.current.style.transform = 'translateY(0)';
+          }
+        }, 100 + i * 150);
+      }
+    });
+  }, []);
+
+  const stats = [
+    { val: '5+', label: 'Years Experience' },
+    { val: '50+', label: 'Projects Delivered' },
+    { val: '30+', label: 'Clients Served' },
+  ];
+
+  const pills = [
+    { icon: Cpu, text: 'AI & Machine Learning' },
+    { icon: Zap, text: 'Process Automation' },
+    { icon: Shield, text: 'Enterprise Grade' },
+  ];
 
   return (
-    <section id="home" className="relative pt-20 pb-16 md:pt-32 md:pb-24 bg-gradient-to-br from-blue-50 to-indigo-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          {/* Text Content */}
-          <div className="space-y-6">
-            <div className="inline-block px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm">
-              {t('hero.excellence')}
-            </div>
-            
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900">
-              {t('hero.title')}
-            </h1>
-            
-            <p className="text-xl text-gray-600">
-              {t('hero.description')}
-            </p>
+    <section
+      id="home"
+      className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden pt-16"
+      style={{
+        background:
+          'linear-gradient(180deg, #c8dcea 0%, #d8e8f4 20%, #e4eff7 50%, #eef5fb 75%, #ffffff 100%)',
+      }}
+    >
+      {/* Subtle grid overlay */}
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style={{
+          backgroundImage:
+            'linear-gradient(#0f172a 1px, transparent 1px), linear-gradient(90deg, #0f172a 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
+        }}
+      />
 
-            <div className="flex flex-wrap gap-4">
-              <Button 
-                size="lg" 
-                onClick={() => onNavigate('services')}
-                className="bg-blue-600 hover:bg-blue-700"
-              >
-                {t('hero.servicesBtn')}
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-              <Button 
-                size="lg" 
-                variant="outline"
-                onClick={() => onNavigate('contact')}
-              >
-                {t('hero.contactBtn')}
-              </Button>
-            </div>
+      <div className="mx-auto flex max-w-3xl flex-col items-center px-4 pb-24 pt-16 text-center">
+        <span
+          ref={badgeRef}
+          className="mb-6 inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.2em] text-teal-700"
+          style={{ backgroundColor: '#d4eaea' }}
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-teal-500 animate-pulse" />
+          Enterprise AI Solutions
+        </span>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 pt-8">
-              <div>
-                <div className="text-3xl font-bold text-blue-600">{t('hero.experienceVal')}</div>
-                <div className="text-sm text-gray-600">{t('hero.experienceLabel')}</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-blue-600">{t('hero.projectsVal')}</div>
-                <div className="text-sm text-gray-600">{t('hero.projectsLabel')}</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-blue-600">{t('hero.clientsVal')}</div>
-                <div className="text-sm text-gray-600">{t('hero.clientsLabel')}</div>
-              </div>
-            </div>
-          </div>
+        <h1
+          ref={h1Ref}
+          className="mb-6 text-5xl font-black leading-[1.1] tracking-tight text-slate-900 md:text-6xl lg:text-7xl"
+        >
+          Intelligent Software.{' '}
+          <span className="text-teal-600">Powered by AI.</span>
+        </h1>
 
-          {/* Image */}
-          <div className="relative">
-            <div className="aspect-square rounded-2xl overflow-hidden shadow-2xl border border-blue-500/20">
-              <img
-                src="/ai_enterprise_hero.png"
-                alt="Enterprise AI Operations & Business Automation"
-                className="w-full h-full object-cover transform hover:scale-105 transition-transform duration-700"
-              />
+        <p
+          ref={pRef}
+          className="mb-10 max-w-xl text-[15px] leading-relaxed text-slate-500"
+        >
+          Graycodder.ai builds bespoke AI-powered software, automation systems, and
+          enterprise-grade platforms for businesses ready to operate at the next level.
+        </p>
+
+        <div ref={ctaRef} className="flex flex-wrap gap-3 justify-center">
+          <button
+            onClick={() => onNavigate('services')}
+            className="inline-flex items-center gap-2 rounded-full bg-slate-900 px-6 py-2.5 text-sm font-semibold text-white hover:bg-slate-700 transition-colors cursor-pointer"
+          >
+            Explore Services
+            <ArrowRight className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => onNavigate('contact')}
+            className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white/60 backdrop-blur-sm px-6 py-2.5 text-sm font-semibold text-slate-700 hover:bg-white hover:border-slate-400 transition-colors cursor-pointer"
+          >
+            Talk to Us
+          </button>
+        </div>
+
+        {/* Feature pills */}
+        <div className="mt-12 flex flex-wrap gap-3 justify-center">
+          {pills.map(({ icon: Icon, text }) => (
+            <div
+              key={text}
+              className="flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/60 backdrop-blur-sm px-4 py-2 text-xs font-medium text-slate-600"
+            >
+              <Icon className="w-3.5 h-3.5 text-teal-600" />
+              {text}
             </div>
-            {/* Floating AI Badge Overlay */}
-            <div className="absolute -bottom-5 -left-5 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-gray-100/80 flex items-center space-x-3 hidden.sm:flex">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white font-black text-lg shadow-md shadow-blue-500/30">
-                AI
-              </div>
-              <div>
-                <div className="text-[11px] font-bold text-blue-600 uppercase tracking-wider">Enterprise Partner</div>
-                <div className="text-sm font-extrabold text-gray-900">100% Business Automation</div>
-              </div>
+          ))}
+        </div>
+
+        {/* Stats */}
+        <div ref={statsRef} className="mt-16 flex gap-12 justify-center">
+          {stats.map(({ val, label }) => (
+            <div key={label} className="text-center">
+              <div className="text-3xl font-black text-slate-900">{val}</div>
+              <div className="mt-1 text-xs text-slate-500 font-medium">{label}</div>
             </div>
-            {/* Decorative Glow elements */}
-            <div className="absolute -top-6 -right-6 w-28 h-28 bg-blue-600 rounded-full opacity-25 blur-2xl pointer-events-none"></div>
-            <div className="absolute -bottom-6 -left-6 w-36 h-36 bg-indigo-600 rounded-full opacity-25 blur-2xl pointer-events-none"></div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

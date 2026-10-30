@@ -91,6 +91,7 @@ export default function App() {
   const handleLoginSuccess = () => {
     setShowAdminLogin(false);
     setShowAdminPanel(true);
+    setIsLoggedIn(true);
   };
 
   const handleLogout = async () => {
@@ -105,7 +106,8 @@ export default function App() {
   };
 
   const handleAdminClick = () => {
-    setShowAdminPanel(true);
+    // Always require login — never open panel directly
+    setShowAdminLogin(true);
   };
 
   const fetchAllData = async () => {
@@ -145,11 +147,27 @@ export default function App() {
     };
 
     checkRegistrationRoute();
-    window.addEventListener('hashchange', checkRegistrationRoute);
+    const checkRoute = () => {
+      const hash = window.location.hash.toLowerCase();
+      const search = window.location.search.toLowerCase();
+      // #admin URL only opens the login dialog — not the panel directly
+      if (hash === '#admin' || search.includes('admin=true')) {
+        setShowAdminLogin(true);
+        window.history.replaceState(null, '', window.location.pathname);
+      } else if (hash === '#register' || hash === '#ai-training' || hash === '#course' || search.includes('register')) {
+        setContactTab('course');
+        setTimeout(() => {
+          const element = document.getElementById('register') || document.getElementById('contact');
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 300);
+      }
+    };
+    checkRoute();
 
     return () => {
       unsubscribe();
-      window.removeEventListener('hashchange', checkRegistrationRoute);
     };
   }, []);
 

@@ -1,118 +1,100 @@
 import React from 'react';
-import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin, Sparkles } from 'lucide-react';
-import { useTranslation } from '../../lib/i18n';
+import { Mail, Phone, MapPin, Linkedin, Twitter, Github } from 'lucide-react';
 
 interface FooterProps {
   onAdminClick: () => void;
 }
 
+const navLinks = [
+  { label: 'About', section: 'about' },
+  { label: 'Services', section: 'services' },
+  { label: 'Portfolio', section: 'portfolio' },
+  { label: 'Blog', section: 'blog' },
+  { label: 'Contact', section: 'contact' },
+];
+
 export function Footer({ onAdminClick }: FooterProps) {
-  const { t } = useTranslation();
   const currentYear = new Date().getFullYear();
 
+  const scrollTo = (section: string) => {
+    const el = document.getElementById(section);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid md:grid-cols-4 gap-8 mb-8">
-          {/* Company Info */}
-          <div className="md:col-span-2">
-            <div className="flex items-center space-x-2.5 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
-                <Sparkles className="w-4 h-4" />
+    <footer className="border-t border-slate-200 bg-white">
+      {/* Get in touch banner */}
+      <div className="border-b border-slate-200 py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="rounded-xl border border-slate-200 bg-white p-10 shadow-sm">
+            <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2">
+              <div>
+                <h2 className="mb-2 text-3xl font-bold text-slate-900">Get in touch</h2>
+                <p className="text-sm text-slate-500">
+                  Ready to build something intelligent? We'd love to hear about your project.
+                </p>
               </div>
-              <div className="flex items-center space-x-1.5 leading-none">
-                <span className="text-2xl font-extrabold text-white tracking-tight">Graycodder</span>
-                <span className="text-2xl font-extrabold bg-gradient-to-r from-blue-400 to-indigo-400 bg-clip-text text-transparent">AI</span>
+              <div className="flex flex-col items-start gap-3 md:items-end">
+                <div className="flex items-center gap-2">
+                  <Mail className="h-5 w-5 text-slate-700" />
+                  <a
+                    href="mailto:graycodder@graycodder.com"
+                    className="text-lg font-bold text-slate-900 hover:text-teal-600 transition-colors"
+                  >
+                    graycodder@graycodder.com
+                  </a>
+                </div>
+                <div className="flex items-center gap-2 text-sm text-slate-500">
+                  <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                  Active Support Channels
+                </div>
               </div>
             </div>
-            <p className="text-gray-400 mb-4">
-              {t('footer.desc') || t('footer.description')}
-            </p>
-            <div className="flex space-x-4">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Facebook className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                <Instagram className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div>
-            <h4 className="font-semibold mb-4">{t('footer.quickLinks') || t('footer.linksTitle') || 'Quick Links'}</h4>
-            <ul className="space-y-2 text-gray-400">
-              <li>
-                <a href="#home" className="hover:text-white transition-colors">
-                  {t('nav.home')}
-                </a>
-              </li>
-              <li>
-                <a href="#about" className="hover:text-white transition-colors">
-                  {t('nav.about')}
-                </a>
-              </li>
-              <li>
-                <a href="#services" className="hover:text-white transition-colors">
-                  {t('nav.services')}
-                </a>
-              </li>
-              <li>
-                <a href="#portfolio" className="hover:text-white transition-colors">
-                  {t('nav.portfolio')}
-                </a>
-              </li>
-              <li>
-                <a href="#blog" className="hover:text-white transition-colors">
-                  {t('nav.blog')}
-                </a>
-              </li>
-              <li>
-                <button onClick={onAdminClick} className="hover:text-white transition-colors cursor-pointer text-left">
-                  Admin Panel
-                </button>
-              </li>
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-            <h4 className="font-semibold mb-4">{t('footer.contact') || t('footer.contactTitle') || 'Contact'}</h4>
-            <ul className="space-y-3 text-gray-400">
-              <li className="flex items-start">
-                <MapPin className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
-                <span className="text-sm">
-                  16/149, S. Chellanam<br />
-                  Kochi - 682008, Kerala
-                </span>
-              </li>
-              <li className="flex items-center">
-                <Mail className="w-5 h-5 mr-2 flex-shrink-0" />
-                <a href="mailto:graycodder@graycodder.com" className="hover:text-white transition-colors text-sm">
-                  graycodder@graycodder.com
-                </a>
-              </li>
-              <li className="flex items-center">
-                <Phone className="w-5 h-5 mr-2 flex-shrink-0" />
-                <a href="tel:+918075050701" className="hover:text-white transition-colors text-sm">
-                  +91 8075050701
-                </a>
-              </li>
-            </ul>
           </div>
         </div>
+      </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-gray-800 pt-8 text-center text-gray-400 text-sm">
-          <p>
-            © {currentYear} Graycodder. Reg No: <span onDoubleClick={onAdminClick} className="cursor-pointer select-all font-semibold hover:text-blue-400 transition-colors" title="Double click to open admin panel">KL-02-0105921</span>. {t('footer.rights')}
+      {/* Footer bottom */}
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-5 px-4 py-6 sm:px-6 md:flex-row">
+        <div>
+          <p className="text-sm font-bold text-slate-900">
+            Graycodder<span className="text-teal-600">.ai</span>
           </p>
+          <p className="text-xs text-slate-400">
+            © {currentYear} Graycodder · Reg No:{' '}
+            <span
+              onDoubleClick={onAdminClick}
+              className="cursor-pointer font-semibold select-all hover:text-teal-600 transition-colors"
+              title="Double click to open admin panel"
+            >
+              KL-02-0105921
+            </span>{' '}
+            · Enterprise AI Solutions
+          </p>
+        </div>
+
+        <nav className="flex flex-wrap items-center gap-6">
+          {navLinks.map(({ label, section }) => (
+            <button
+              key={section}
+              onClick={() => scrollTo(section)}
+              className="text-xs text-slate-500 transition-colors hover:text-slate-900 cursor-pointer"
+            >
+              {label}
+            </button>
+          ))}
+        </nav>
+
+        <div className="flex items-center gap-3">
+          <a href="#" className="text-slate-400 hover:text-slate-900 transition-colors">
+            <Linkedin className="h-4 w-4" />
+          </a>
+          <a href="#" className="text-slate-400 hover:text-slate-900 transition-colors">
+            <Twitter className="h-4 w-4" />
+          </a>
+          <a href="#" className="text-slate-400 hover:text-slate-900 transition-colors">
+            <Github className="h-4 w-4" />
+          </a>
         </div>
       </div>
     </footer>

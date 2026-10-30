@@ -170,7 +170,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
           {parts[0]}
           <span 
             onDoubleClick={onAdminClick} 
-            className="cursor-pointer select-all font-semibold hover:text-blue-600 transition-colors"
+            className="cursor-pointer select-all font-semibold hover:text-teal-600 transition-colors"
             title="Double click to open admin panel"
           >
             KL-02-0105921
@@ -183,17 +183,20 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
   };
 
   return (
-    <section id="contact" className="py-16 md:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div id="register" className="text-center mb-10">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 bg-blue-50 border border-blue-200 rounded-full text-blue-700 text-xs font-semibold uppercase tracking-wider mb-3">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Graycodder AI Academy</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">
+    <section id="contact" className="py-24 bg-white">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div id="register" className="mb-12 text-center">
+          <span
+            className="mb-3 inline-flex items-center gap-2 rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-teal-700"
+            style={{ backgroundColor: '#d4eaea' }}
+          >
+            <Sparkles className="w-3 h-3" />
+            Graycodder AI Academy
+          </span>
+          <h2 className="text-3xl font-bold text-slate-900 md:text-4xl">
             {currentTab === 'course' ? 'AI Training Registration' : t('contact.title')}
           </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <p className="mx-auto mt-3 max-w-md text-sm text-slate-500">
             {currentTab === 'course' 
               ? 'Enroll in the Graycodder AI Consultants Certified "A Stack" Certificate Program. Open to graduates of any stream.' 
               : t('contact.subtitle')}
@@ -264,42 +267,42 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
 
             {/* Standard Contact Info */}
             <div className="space-y-4 pt-2">
-              <h3 className="text-xl font-bold text-gray-900">
+              <h3 className="text-xl font-bold text-slate-900">
                 {t('contact.infoTitle')}
               </h3>
 
               <div className="space-y-4">
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                    <MapPin className="w-5 h-5 text-blue-600" />
+                  <div className="flex-shrink-0 w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center mr-4">
+                    <MapPin className="w-5 h-5 text-teal-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 text-sm">{t('contact.address')}</h4>
-                    <p className="text-gray-600 text-sm whitespace-pre-line">
+                    <h4 className="font-semibold text-slate-900 text-sm">{t('contact.address')}</h4>
+                    <p className="text-slate-600 text-sm whitespace-pre-line">
                       {renderAddressWithClick(t('about.locationAddress'))}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                    <Mail className="w-5 h-5 text-blue-600" />
+                  <div className="flex-shrink-0 w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center mr-4">
+                    <Mail className="w-5 h-5 text-teal-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 text-sm">{t('contact.email')}</h4>
-                    <a href="mailto:graycodder@graycodder.com" className="text-blue-600 hover:text-blue-700 text-sm">
+                    <h4 className="font-semibold text-slate-900 text-sm">{t('contact.email')}</h4>
+                    <a href="mailto:graycodder@graycodder.com" className="text-teal-600 hover:text-teal-700 text-sm">
                       graycodder@graycodder.com
                     </a>
                   </div>
                 </div>
 
                 <div className="flex items-start">
-                  <div className="flex-shrink-0 w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
-                    <Phone className="w-5 h-5 text-blue-600" />
+                  <div className="flex-shrink-0 w-10 h-10 bg-slate-100 rounded-lg flex items-center justify-center mr-4">
+                    <Phone className="w-5 h-5 text-teal-600" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 text-sm">{t('contact.phone')}</h4>
-                    <a href="tel:+918075050701" className="text-blue-600 hover:text-blue-700 text-sm">
+                    <h4 className="font-semibold text-slate-900 text-sm">{t('contact.phone')}</h4>
+                    <a href="tel:+918075050701" className="text-teal-600 hover:text-teal-700 text-sm">
                       +91 8075050701
                     </a>
                   </div>
@@ -308,7 +311,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
             </div>
 
             {/* Map iframe */}
-            <div className="rounded-xl overflow-hidden shadow-md h-48 border border-gray-200">
+            <div className="rounded-xl overflow-hidden shadow-sm h-48 border border-slate-200">
               <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d125451.01019823008!2d76.2245!3d9.9312!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b0874e99c9f0a77%3A0x4f7c4f7e6b4a4f7e!2sChellanam%2C%20Kerala!5e0!3m2!1sen!2sin!4v1234567890"
                 width="100%"
@@ -322,16 +325,16 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
           </div>
 
           {/* Form Container with Tabs */}
-          <div className="bg-gradient-to-br from-blue-50/70 to-indigo-50/70 p-6 md:p-8 rounded-2xl border border-blue-100/80 shadow-sm">
+          <div className="bg-slate-50 p-6 md:p-8 rounded-2xl border border-slate-200 shadow-sm">
             {/* Tab Navigation */}
-            <div className="flex rounded-xl bg-white/80 p-1 border border-blue-200/60 mb-6">
+            <div className="flex rounded-xl bg-white p-1 border border-slate-200 mb-6">
               <button
                 type="button"
                 onClick={() => handleTabSwitch('general')}
                 className={`flex-1 py-2.5 px-3 rounded-lg text-xs md:text-sm font-semibold transition-all cursor-pointer ${
                   currentTab === 'general'
-                    ? 'bg-blue-600 text-white shadow'
-                    : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/50'
+                    ? 'bg-slate-900 text-white shadow'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 {t('course.tabGeneral') || 'General Message'}
@@ -341,8 +344,8 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
                 onClick={() => handleTabSwitch('course')}
                 className={`flex-1 py-2.5 px-3 rounded-lg text-xs md:text-sm font-semibold flex items-center justify-center space-x-1.5 transition-all cursor-pointer ${
                   currentTab === 'course'
-                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow'
-                    : 'text-blue-700 hover:text-blue-900 hover:bg-blue-50/50'
+                    ? 'bg-teal-600 text-white shadow'
+                    : 'text-teal-700 hover:text-teal-900 hover:bg-teal-50'
                 }`}
               >
                 <Sparkles className="w-4 h-4 text-amber-300 animate-pulse" />
@@ -353,12 +356,12 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
             {currentTab === 'general' ? (
               /* General Contact Form */
               <form onSubmit={handleGeneralSubmit} className="space-y-4">
-                <h3 className="text-xl font-bold text-gray-900 mb-2">
+                <h3 className="text-xl font-bold text-slate-900 mb-2">
                   {t('contact.messageTitle')}
                 </h3>
 
                 <div>
-                  <label htmlFor="gen-name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="gen-name" className="block text-sm font-medium text-slate-700 mb-1">
                     {t('contact.label.name')}
                   </label>
                   <Input
@@ -373,7 +376,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
                 </div>
 
                 <div>
-                  <label htmlFor="gen-email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="gen-email" className="block text-sm font-medium text-slate-700 mb-1">
                     {t('contact.label.email')}
                   </label>
                   <Input
@@ -388,7 +391,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
                 </div>
 
                 <div>
-                  <label htmlFor="gen-phone" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="gen-phone" className="block text-sm font-medium text-slate-700 mb-1">
                     {t('contact.label.phone')}
                   </label>
                   <Input
@@ -402,7 +405,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
                 </div>
 
                 <div>
-                  <label htmlFor="gen-message" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="gen-message" className="block text-sm font-medium text-slate-700 mb-1">
                     {t('contact.label.message')}
                   </label>
                   <Textarea
@@ -418,7 +421,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
 
                 <Button
                   type="submit"
-                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  className="w-full bg-slate-900 hover:bg-slate-700 text-white"
                   disabled={isSubmitting}
                 >
                   {isSubmitting ? t('contact.btn.sending') : t('contact.btn.send')}
@@ -428,21 +431,21 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
             ) : (
               /* Course Registration Form */
               <form onSubmit={handleCourseSubmit} className="space-y-4">
-                <div className="border-b border-blue-200/60 pb-3 mb-4">
-                  <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-blue-700 mb-1">
+                <div className="border-b border-slate-200 pb-3 mb-4">
+                  <div className="flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-teal-700 mb-1">
                     <Award className="w-4 h-4 text-amber-500" />
                     <span>Graycodder AI Consultants Certified "A Stack"</span>
                   </div>
-                  <h3 className="text-xl font-bold text-gray-900">
+                  <h3 className="text-xl font-bold text-slate-900">
                     Course Registration
                   </h3>
-                  <p className="text-xs text-gray-600 mt-1">
+                  <p className="text-xs text-slate-600 mt-1">
                     Open for Graduates of ANY Stream (B.Tech, B.Sc, B.Com, B.A, BCA, MBA, etc.)
                   </p>
                 </div>
 
                 <div>
-                  <label htmlFor="course-name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="course-name" className="block text-sm font-medium text-slate-700 mb-1">
                     Full Name *
                   </label>
                   <Input
@@ -458,7 +461,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="course-email" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="course-email" className="block text-sm font-medium text-slate-700 mb-1">
                       Email Address *
                     </label>
                     <Input
@@ -473,7 +476,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
                   </div>
 
                   <div>
-                    <label htmlFor="course-phone" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="course-phone" className="block text-sm font-medium text-slate-700 mb-1">
                       Phone / WhatsApp *
                     </label>
                     <Input
@@ -490,7 +493,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="course-stream" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="course-stream" className="block text-sm font-medium text-slate-700 mb-1">
                       Graduation Stream / Degree *
                     </label>
                     <Input
@@ -505,7 +508,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
                   </div>
 
                   <div>
-                    <label htmlFor="course-status" className="block text-sm font-medium text-gray-700 mb-1">
+                    <label htmlFor="course-status" className="block text-sm font-medium text-slate-700 mb-1">
                       Status / Graduation Year *
                     </label>
                     <Input
@@ -521,7 +524,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
                 </div>
 
                 <div>
-                  <label htmlFor="course-message" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="course-message" className="block text-sm font-medium text-slate-700 mb-1">
                     Motivation / Background *
                   </label>
                   <Textarea
@@ -538,7 +541,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
                 <div className="pt-2 space-y-2">
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 shadow-md"
+                    className="w-full bg-slate-900 hover:bg-slate-700 text-white font-bold py-3 shadow-sm"
                     disabled={isSubmitting}
                   >
                     {isSubmitting ? (
@@ -554,7 +557,7 @@ export function Contact({ onAdminClick, activeTab = 'general', onTabChange }: Co
                   <button
                     type="button"
                     onClick={handleCopyShareLink}
-                    className="w-full text-center text-xs text-blue-600 hover:text-blue-800 font-semibold py-1.5 flex items-center justify-center space-x-1 cursor-pointer"
+                    className="w-full text-center text-xs text-teal-600 hover:text-teal-800 font-semibold py-1.5 flex items-center justify-center space-x-1 cursor-pointer"
                   >
                     <Copy className="w-3.5 h-3.5" />
                     <span>Copy Social Media Registration Link</span>

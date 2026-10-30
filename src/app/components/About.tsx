@@ -1,103 +1,126 @@
-import React from 'react';
-import { Target, Eye, Award } from 'lucide-react';
-import { useTranslation } from '../../lib/i18n';
+import React, { useEffect, useRef } from 'react';
+import { MapPin, Globe, Target, Eye, Award } from 'lucide-react';
 
 interface AboutProps {
   onAdminClick: () => void;
 }
 
-export function About({ onAdminClick }: AboutProps) {
-  const { t } = useTranslation();
+function useScrollReveal(threshold = 0.15) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(32px)';
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.transition = 'opacity 0.65s ease, transform 0.65s ease';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+          observer.disconnect();
+        }
+      },
+      { threshold }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [threshold]);
+  return ref;
+}
 
-  const renderAddressWithClick = (addressText: string) => {
-    const parts = addressText.split('KL-02-0105921');
-    if (parts.length === 2) {
-      return (
-        <>
-          {parts[0]}
-          <span 
-            onDoubleClick={onAdminClick} 
-            className="cursor-pointer select-all font-semibold hover:text-blue-600 transition-colors"
-            title="Double click to open admin panel"
-          >
-            KL-02-0105921
-          </span>
-          {parts[1]}
-        </>
-      );
-    }
-    return addressText;
-  };
+export function About({ onAdminClick }: AboutProps) {
+  const storyRef = useScrollReveal();
+  const pillarsRef = useScrollReveal();
+
+  const pillars = [
+    {
+      icon: Eye,
+      title: 'Our Vision',
+      description:
+        'To be the leading AI engineering partner for businesses in South Asia and beyond — delivering software that learns, adapts, and scales.',
+      color: 'bg-teal-600',
+    },
+    {
+      icon: Target,
+      title: 'Our Mission',
+      description:
+        'Make enterprise-grade AI accessible to every growing business — from intelligent automation to custom LLM integrations.',
+      color: 'bg-slate-900',
+    },
+    {
+      icon: Award,
+      title: 'Our Commitment',
+      description:
+        'Transparent delivery, production-quality code, and ongoing support. We\'re long-term partners, not one-time vendors.',
+      color: 'bg-teal-700',
+    },
+  ];
 
   return (
-    <section id="about" className="py-16 md:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {t('about.title')}
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t('about.subtitle')}
-          </p>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-12 items-center mb-16">
+    <section id="about" className="bg-white py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Story */}
+        <div ref={storyRef} className="grid grid-cols-1 items-center gap-16 md:grid-cols-2">
           <div>
-            <img
-              src="https://images.unsplash.com/photo-1741388505655-3322689ffad6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxrZXJhbGElMjBpbmRpYSUyMGNvYXN0YWwlMjB2aWxsYWdlfGVufDF8fHx8MTc3MDUyMTMyMnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-              alt="Chellanam Kerala"
-              className="w-full h-96 object-cover rounded-lg shadow-lg"
-            />
+            <h2 className="mb-5 text-2xl font-bold text-slate-900">Our Story</h2>
+            <p className="mb-4 text-sm leading-loose text-slate-600">
+              Founded in Chellanam, Kerala, Graycodder.ai was built by engineers who saw the gap
+              between AI hype and real business outcomes. We specialise in translating cutting-edge
+              AI research into production systems that your operations can rely on.
+            </p>
+            <p className="mb-6 text-sm leading-loose text-slate-600">
+              From natural language interfaces to end-to-end ML pipelines, our team brings
+              deep expertise across the full AI stack — building tools that actually work in the
+              real world.
+            </p>
+            <div className="flex flex-wrap gap-6">
+              <div className="flex items-center gap-2 text-sm text-slate-700">
+                <MapPin className="h-4 w-4 shrink-0 text-teal-600" />
+                <span>
+                  <span
+                    onDoubleClick={onAdminClick}
+                    className="cursor-pointer font-semibold hover:text-teal-600 transition-colors select-all"
+                    title="Double click to open admin panel"
+                  >
+                    KL-02-0105921
+                  </span>
+                  &nbsp;· Kochi, Kerala
+                </span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-slate-700">
+                <Globe className="h-4 w-4 shrink-0 text-teal-600" />
+                <span>Serving Clients Globally</span>
+              </div>
+            </div>
           </div>
 
-          <div className="space-y-6">
-            <p className="text-gray-700 leading-relaxed">
-              {t('about.desc1')}
-            </p>
-
-            <p className="text-gray-700 leading-relaxed">
-              {t('about.desc2')}
-            </p>
-
-            <div className="bg-blue-50 p-6 rounded-lg">
-              <h3 className="font-bold text-gray-900 mb-2">{t('about.locationTitle')}</h3>
-              <p className="text-gray-700 whitespace-pre-line">
-                {renderAddressWithClick(t('about.locationAddress'))}
-              </p>
-            </div>
+          <div className="relative h-80 overflow-hidden rounded-2xl shadow-sm">
+            <img
+              src="https://images.unsplash.com/photo-1741388505655-3322689ffad6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900"
+              alt="Chellanam Kerala"
+              className="h-full w-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/30 to-transparent" />
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          <div className="text-center p-6 bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 text-white rounded-full mb-4">
-              <Eye className="w-8 h-8" />
+        {/* Pillars */}
+        <div ref={pillarsRef} className="mt-20 grid grid-cols-1 gap-6 md:grid-cols-3">
+          {pillars.map(({ icon: Icon, title, description, color }) => (
+            <div
+              key={title}
+              className="rounded-xl border border-slate-200 bg-white p-8 shadow-sm hover:shadow-md transition-shadow"
+            >
+              <div
+                className={`mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg ${color}`}
+              >
+                <Icon className="h-[18px] w-[18px] text-white" />
+              </div>
+              <h3 className="mb-2 text-base font-bold text-slate-900">{title}</h3>
+              <p className="text-sm leading-relaxed text-slate-500">{description}</p>
             </div>
-            <h3 className="font-bold text-gray-900 mb-2">{t('about.visionTitle')}</h3>
-            <p className="text-gray-700">
-              {t('about.visionDesc')}
-            </p>
-          </div>
-
-          <div className="text-center p-6 bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-lg">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 text-white rounded-full mb-4">
-              <Target className="w-8 h-8" />
-            </div>
-            <h3 className="font-bold text-gray-900 mb-2">{t('about.missionTitle')}</h3>
-            <p className="text-gray-700">
-              {t('about.missionDesc')}
-            </p>
-          </div>
-
-          <div className="text-center p-6 bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-600 text-white rounded-full mb-4">
-              <Award className="w-8 h-8" />
-            </div>
-            <h3 className="font-bold text-gray-900 mb-2">{t('about.commitmentTitle')}</h3>
-            <p className="text-gray-700">
-              {t('about.commitmentDesc')}
-            </p>
-          </div>
+          ))}
         </div>
       </div>
     </section>

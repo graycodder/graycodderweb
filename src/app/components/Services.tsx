@@ -1,133 +1,204 @@
-import React from 'react';
-import { Globe, Smartphone, Lightbulb, Code, Rocket, Headphones } from 'lucide-react';
-import { useTranslation } from '../../lib/i18n';
+import React, { useEffect, useRef } from 'react';
+import { Brain, Globe, Smartphone, Lightbulb, Code, Headphones, CheckCircle } from 'lucide-react';
 
-export function Services() {
-  const { t } = useTranslation();
+function useScrollReveal(delay = 0) {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(32px)';
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            if (el) {
+              el.style.transition = 'opacity 0.65s ease, transform 0.65s ease';
+              el.style.opacity = '1';
+              el.style.transform = 'translateY(0)';
+            }
+          }, delay);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [delay]);
+  return ref;
+}
 
-  const services = [
-    {
-      icon: Globe,
-      title: t('services.web.title'),
-      description: t('services.web.description'),
-      features: [
-        t('services.web.f1'),
-        t('services.web.f2'),
-        t('services.web.f3'),
-        t('services.web.f4')
-      ]
-    },
-    {
-      icon: Smartphone,
-      title: t('services.mobile.title'),
-      description: t('services.mobile.description'),
-      features: [
-        t('services.mobile.f1'),
-        t('services.mobile.f2'),
-        t('services.mobile.f3'),
-        t('services.mobile.f4')
-      ]
-    },
-    {
-      icon: Lightbulb,
-      title: t('services.ideas.title'),
-      description: t('services.ideas.description'),
-      features: [
-        t('services.ideas.f1'),
-        t('services.ideas.f2'),
-        t('services.ideas.f3'),
-        t('services.ideas.f4')
-      ]
-    },
-    {
-      icon: Code,
-      title: t('services.software.title'),
-      description: t('services.software.description'),
-      features: [
-        t('services.software.f1'),
-        t('services.software.f2'),
-        t('services.software.f3'),
-        t('services.software.f4')
-      ]
-    },
-    {
-      icon: Rocket,
-      title: t('services.digital.title'),
-      description: t('services.digital.description'),
-      features: [
-        t('services.digital.f1'),
-        t('services.digital.f2'),
-        t('services.digital.f3'),
-        t('services.digital.f4')
-      ]
-    },
-    {
-      icon: Headphones,
-      title: t('services.support.title'),
-      description: t('services.support.description'),
-      features: [
-        t('services.support.f1'),
-        t('services.support.f2'),
-        t('services.support.f3'),
-        t('services.support.f4')
-      ]
-    }
-  ];
+const services = [
+  {
+    icon: Brain,
+    title: 'AI & LLM Integration',
+    description:
+      'Embed large language models into your business workflows — chatbots, copilots, document intelligence, and custom fine-tuned models.',
+    features: [
+      'Custom LLM fine-tuning',
+      'RAG pipelines',
+      'AI chatbots & copilots',
+      'Document intelligence',
+    ],
+  },
+  {
+    icon: Globe,
+    title: 'Web Application Development',
+    description:
+      'Full-stack web applications built for scale — from SaaS platforms to internal business tools.',
+    features: [
+      'React / Next.js frontends',
+      'Node.js & Python backends',
+      'REST & GraphQL APIs',
+      'Firebase & cloud hosting',
+    ],
+  },
+  {
+    icon: Smartphone,
+    title: 'Mobile App Development',
+    description:
+      'Cross-platform mobile experiences with native performance, built with Flutter and React Native.',
+    features: [
+      'Flutter (iOS & Android)',
+      'React Native',
+      'Offline-first architecture',
+      'Push notifications & realtime',
+    ],
+  },
+  {
+    icon: Code,
+    title: 'Process Automation',
+    description:
+      'Eliminate repetitive tasks with intelligent RPA, workflow orchestration, and system integration.',
+    features: [
+      'RPA & workflow bots',
+      'API integrations',
+      'Data pipeline automation',
+      'Scheduled intelligence tasks',
+    ],
+  },
+  {
+    icon: Lightbulb,
+    title: 'AI Strategy & Consulting',
+    description:
+      'Navigate the AI landscape with expert guidance — from ideation to a concrete, ROI-driven roadmap.',
+    features: [
+      'AI readiness assessment',
+      'Use case discovery',
+      'Technology selection',
+      'Implementation roadmap',
+    ],
+  },
+  {
+    icon: Headphones,
+    title: 'Maintenance & Support',
+    description:
+      'Dedicated post-launch support, monitoring, and continuous improvement to keep your systems running at peak.',
+    features: [
+      '24/7 monitoring',
+      'Performance optimisation',
+      'Security patching',
+      'Feature iterations',
+    ],
+  },
+];
+
+/* Individual service card — each in its own component so hooks are legal */
+function ServiceCard({
+  service,
+  delay,
+}: {
+  service: (typeof services)[0];
+  delay: number;
+}) {
+  const ref = useScrollReveal(delay);
+  const { icon: Icon, title, description, features } = service;
 
   return (
-    <section id="services" className="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-blue-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {t('services.title')}
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t('services.subtitle')}
+    <div
+      ref={ref}
+      className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow"
+    >
+      <div className="grid grid-cols-1 items-center md:grid-cols-[2fr_3fr]">
+        <div className="p-8">
+          <div className="mb-4 inline-flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900">
+            <Icon className="h-[18px] w-[18px] text-white" />
+          </div>
+          <h3 className="mb-2 text-lg font-bold text-slate-900">{title}</h3>
+          <p className="mb-5 text-sm leading-relaxed text-slate-500">{description}</p>
+          <ul className="space-y-2">
+            {features.map((f) => (
+              <li key={f} className="flex items-center gap-2.5 text-sm text-slate-700">
+                <CheckCircle className="h-4 w-4 shrink-0 text-teal-600" />
+                {f}
+              </li>
+            ))}
+          </ul>
+        </div>
+        {/* Decorative right panel */}
+        <div
+          className="hidden md:flex h-full min-h-[220px] border-l border-slate-200 items-center justify-center relative overflow-hidden"
+          style={{
+            background:
+              'linear-gradient(135deg, #e4f0f8 0%, #f0f6fc 50%, #e8f4ef 100%)',
+          }}
+        >
+          <Icon className="w-36 h-36 text-slate-200" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function Services() {
+  const titleRef = useScrollReveal();
+
+  return (
+    <section
+      id="services"
+      className="py-24"
+      style={{
+        background: 'linear-gradient(180deg, #ffffff 0%, #f0f6fc 100%)',
+      }}
+    >
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Title */}
+        <div ref={titleRef} className="mb-14 text-center">
+          <span
+            className="mb-3 inline-block rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-teal-700"
+            style={{ backgroundColor: '#d4eaea' }}
+          >
+            What We Build
+          </span>
+          <h2 className="text-3xl font-bold text-slate-900 md:text-4xl">Our Services</h2>
+          <p className="mx-auto mt-3 max-w-md text-sm text-slate-500">
+            End-to-end AI and software services designed for businesses that want to move
+            fast and scale sustainably.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow"
-            >
-              <div className="inline-flex items-center justify-center w-14 h-14 bg-blue-100 text-blue-600 rounded-lg mb-4">
-                <service.icon className="w-7 h-7" />
-              </div>
-              
-              <h3 className="text-xl font-bold text-gray-900 mb-3">
-                {service.title}
-              </h3>
-              
-              <p className="text-gray-600 mb-4">
-                {service.description}
-              </p>
-
-              <ul className="space-y-2">
-                {service.features.map((feature, idx) => (
-                  <li key={idx} className="flex items-center text-sm text-gray-700">
-                    <div className="w-1.5 h-1.5 bg-blue-600 rounded-full mr-2"></div>
-                    {feature}
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {/* Service cards */}
+        <div className="space-y-6">
+          {services.map((service, i) => (
+            <ServiceCard key={service.title} service={service} delay={i * 60} />
           ))}
         </div>
 
-        <div className="mt-16 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-8 md:p-12 text-white text-center">
-          <h3 className="text-2xl md:text-3xl font-bold mb-4">
-            {t('services.readyTitle')}
-          </h3>
-          <p className="text-lg mb-6 opacity-90">
-            {t('services.readyDesc')}
+        {/* CTA Banner */}
+        <div className="mt-14 rounded-xl bg-slate-900 p-10 text-center text-white">
+          <h3 className="mb-3 text-2xl font-bold">Ready to build something intelligent?</h3>
+          <p className="mb-6 mx-auto max-w-md text-sm text-slate-400">
+            Tell us about your project and we'll put together a clear, actionable plan — no sales
+            pitch, just solutions.
           </p>
-          <button 
-            onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
-            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors cursor-pointer"
+          <button
+            onClick={() =>
+              document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
+            }
+            className="rounded-full bg-teal-500 px-8 py-2.5 text-sm font-semibold text-white hover:bg-teal-400 transition-colors cursor-pointer"
           >
-            {t('services.contactBtn')}
+            Start a Conversation
           </button>
         </div>
       </div>

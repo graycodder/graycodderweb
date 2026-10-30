@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Calendar, User, ArrowRight, Share2, Link, Facebook, Twitter, Linkedin } from 'lucide-react';
-import { Button } from './ui/button';
 import { getBlogs, BlogPost } from '../../lib/firestore';
 import { useTranslation } from '../../lib/i18n';
 import { toast } from 'sonner';
@@ -39,128 +38,136 @@ export function Blog() {
 
   if (loading) {
     return (
-      <section id="blog" className="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-xl text-gray-600">{t('blog.loading')}</p>
+      <section id="blog" className="py-24 bg-white">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 text-center">
+          <p className="text-sm text-slate-400">Loading articles…</p>
         </div>
       </section>
     );
   }
 
   return (
-    <section id="blog" className="py-16 md:py-24 bg-gradient-to-br from-gray-50 to-blue-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    <section id="blog" className="py-24 bg-white">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="mb-12 text-center">
+          <span
+            className="mb-3 inline-block rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-teal-700"
+            style={{ backgroundColor: '#d4eaea' }}
+          >
+            Insights
+          </span>
+          <h2 className="text-3xl font-bold text-slate-900 md:text-4xl">
             {t('blog.title')}
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+          <p className="mx-auto mt-3 max-w-md text-sm text-slate-500">
             {t('blog.subtitle')}
           </p>
         </div>
 
         {!selectedPost ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {posts.map((post) => (
               <article
                 key={post.id}
-                className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
+                className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="relative h-48">
+                <div className="relative h-44 overflow-hidden bg-slate-100">
                   <img
                     src={post.imageUrl}
                     alt={post.title}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute top-4 left-4">
-                    <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
-                      {post.category}
-                    </span>
-                  </div>
+                  <span className="absolute top-3 left-3 rounded-full bg-teal-600 px-3 py-0.5 text-xs font-semibold text-white">
+                    {post.category}
+                  </span>
                 </div>
 
-                <div className="p-6">
-                  <h3 className="font-bold text-gray-900 mb-3 text-lg line-clamp-2">
+                <div className="p-5">
+                  <h3 className="mb-2 font-bold text-slate-900 line-clamp-2 leading-snug">
                     {post.title}
                   </h3>
 
-                  <p className="text-gray-600 mb-4 line-clamp-3">
+                  <p className="mb-4 text-sm text-slate-500 line-clamp-2">
                     {post.excerpt}
                   </p>
 
-                  <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                    <div className="flex items-center">
-                      <User className="w-4 h-4 mr-1" />
-                      {post.author}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3 text-xs text-slate-400">
+                      <div className="flex items-center gap-1">
+                        <User className="w-3.5 h-3.5" />
+                        {post.author}
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {post.date}
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <Calendar className="w-4 h-4 mr-1" />
-                      {post.date}
-                    </div>
+                    <button
+                      onClick={() => setSelectedPost(post)}
+                      className="flex items-center gap-1 text-xs font-semibold text-teal-600 hover:text-teal-700 transition-colors cursor-pointer"
+                    >
+                      Read
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
                   </div>
-
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => setSelectedPost(post)}
-                  >
-                    {t('blog.readMore')}
-                    <ArrowRight className="ml-2 w-4 h-4" />
-                  </Button>
                 </div>
               </article>
             ))}
           </div>
+
         ) : (
-          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-            <div className="relative h-96">
+          <div className="max-w-4xl mx-auto bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+            <div className="relative h-80 md:h-96">
               <img
                 src={selectedPost.imageUrl}
                 alt={selectedPost.title}
                 className="w-full h-full object-cover"
               />
-              <Button
-                variant="outline"
-                className="absolute top-4 left-4 bg-white"
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/40 to-transparent" />
+              <button
                 onClick={() => setSelectedPost(null)}
+                className="absolute top-4 left-4 inline-flex items-center gap-1.5 rounded-full bg-white/90 backdrop-blur-sm px-4 py-1.5 text-xs font-semibold text-slate-700 shadow hover:bg-white transition-colors cursor-pointer"
               >
-                {t('blog.back')}
-              </Button>
+                ← {t('blog.back')}
+              </button>
             </div>
 
             <div className="p-8">
               <div className="mb-4">
-                <span className="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm">
+                <span
+                  className="rounded-full px-3 py-1 text-xs font-semibold text-teal-700"
+                  style={{ backgroundColor: '#d4eaea' }}
+                >
                   {selectedPost.category}
                 </span>
               </div>
 
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 leading-tight">
                 {selectedPost.title}
               </h1>
 
-              <div className="flex items-center gap-6 text-gray-500 mb-8">
-                <div className="flex items-center">
-                  <User className="w-5 h-5 mr-2" />
+              <div className="flex items-center gap-5 text-slate-500 text-sm mb-8 pb-8 border-b border-slate-100">
+                <div className="flex items-center gap-1.5">
+                  <User className="w-4 h-4" />
                   {selectedPost.author}
                 </div>
-                <div className="flex items-center">
-                  <Calendar className="w-5 h-5 mr-2" />
+                <div className="flex items-center gap-1.5">
+                  <Calendar className="w-4 h-4" />
                   {selectedPost.date}
                 </div>
               </div>
 
               <div className="prose max-w-none">
-                <p className="text-lg text-gray-700 leading-relaxed whitespace-pre-line">
+                <p className="text-base text-slate-700 leading-loose whitespace-pre-line">
                   {selectedPost.content}
                 </p>
               </div>
 
               {/* Share section */}
-              <div className="mt-8 pt-6 border-t border-gray-100">
+              <div className="mt-10 pt-6 border-t border-slate-100">
                 <div className="flex flex-wrap items-center justify-between gap-4">
-                  <div className="flex items-center gap-2 text-gray-700 font-semibold text-sm">
-                    <Share2 className="w-4.5 h-4.5 text-blue-600 animate-pulse" />
+                  <div className="flex items-center gap-2 text-slate-700 font-semibold text-sm">
+                    <Share2 className="w-4 h-4 text-teal-600" />
                     <span>{t('blog.sharePost')}</span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -186,7 +193,7 @@ export function Blog() {
                       href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(selectedPost.title)}&url=${encodeURIComponent(window.location.href)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="p-2 bg-black hover:bg-gray-800 text-white rounded-full transition-all flex items-center justify-center cursor-pointer shadow-sm hover:shadow hover:scale-105"
+                      className="p-2 bg-slate-900 hover:bg-slate-700 text-white rounded-full transition-all flex items-center justify-center cursor-pointer shadow-sm hover:shadow hover:scale-105"
                       title="Share on X"
                     >
                       <Twitter className="w-4 h-4" />
@@ -202,7 +209,7 @@ export function Blog() {
                     </a>
                     <button
                       onClick={handleCopyLink}
-                      className="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-all flex items-center justify-center cursor-pointer shadow-sm hover:shadow hover:scale-105"
+                      className="p-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full transition-all flex items-center justify-center cursor-pointer shadow-sm hover:shadow hover:scale-105"
                       title="Copy Link"
                     >
                       <Link className="w-4 h-4" />
@@ -215,7 +222,7 @@ export function Blog() {
         )}
 
         {posts.length === 0 && !selectedPost && (
-          <div className="text-center py-12 text-gray-500">
+          <div className="text-center py-12 text-slate-400 text-sm">
             {t('blog.empty')}
           </div>
         )}

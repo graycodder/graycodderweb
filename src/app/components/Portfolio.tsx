@@ -1,137 +1,142 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ExternalLink, Calendar } from 'lucide-react';
-import { Button } from './ui/button';
 import { getPortfolioItems, PortfolioItem } from '../../lib/firestore';
-import { useTranslation } from '../../lib/i18n';
+
+function useScrollReveal() {
+  const ref = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(32px)';
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.style.transition = 'opacity 0.65s ease, transform 0.65s ease';
+          el.style.opacity = '1';
+          el.style.transform = 'translateY(0)';
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return ref;
+}
+
+const categories = ['All', 'Web Development', 'Mobile App', 'E-Commerce', 'Custom Software'];
+
+const categoryLabels: Record<string, string> = {
+  'All': 'All',
+  'Web Development': 'Web',
+  'Mobile App': 'Mobile',
+  'E-Commerce': 'E-Commerce',
+  'Custom Software': 'Custom',
+};
 
 export function Portfolio() {
-  const { t } = useTranslation();
-  const categories = ['All', 'Web Development', 'Mobile App', 'E-Commerce', 'Custom Software'];
-  const [selectedCategory, setSelectedCategory] = React.useState('All');
+  const [selectedCategory, setSelectedCategory] = useState('All');
   const [items, setItems] = useState<PortfolioItem[]>([]);
   const [loading, setLoading] = useState(true);
-
-  const getCategoryLabel = (category: string) => {
-    switch (category) {
-      case 'All': return t('portfolio.category.all');
-      case 'Web Development': return t('portfolio.category.web');
-      case 'Mobile App': return t('portfolio.category.mobile');
-      case 'E-Commerce': return t('portfolio.category.ecommerce');
-      case 'Custom Software': return t('portfolio.category.custom');
-      default: return category;
-    }
-  };
+  const titleRef = useScrollReveal();
+  const gridRef = useScrollReveal();
 
   useEffect(() => {
-    const fetchItems = async () => {
-      try {
-        const data = await getPortfolioItems();
-        setItems(data);
-      } catch (error) {
-        console.error("Failed to fetch portfolio items", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchItems();
+    getPortfolioItems()
+      .then(setItems)
+      .catch(console.error)
+      .finally(() => setLoading(false));
   }, []);
 
-  const filteredItems = selectedCategory === 'All'
-    ? items
-    : items.filter(item => item.category === selectedCategory);
-
-  if (loading) {
-    return (
-      <section id="portfolio" className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-xl text-gray-600">{t('portfolio.loading')}</p>
-        </div>
-      </section>
-    );
-  }
+  const filteredItems =
+    selectedCategory === 'All'
+      ? items
+      : items.filter((item) => item.category === selectedCategory);
 
   return (
-    <section id="portfolio" className="py-16 md:py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            {t('portfolio.title')}
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            {t('portfolio.subtitle')}
+    <section id="portfolio" className="bg-white py-24">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        {/* Header */}
+        <div ref={titleRef} className="mb-12 text-center">
+          <span
+            className="mb-3 inline-block rounded-full px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-teal-700"
+            style={{ backgroundColor: '#d4eaea' }}
+          >
+            Our Work
+          </span>
+          <h2 className="text-3xl font-bold text-slate-900 md:text-4xl">Portfolio</h2>
+          <p className="mx-auto mt-3 max-w-md text-sm text-slate-500">
+            A selection of AI-powered products and platforms we've built for our clients.
           </p>
         </div>
 
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12">
-          {categories.map((category) => (
-            <Button
-              key={category}
-              variant={selectedCategory === category ? 'default' : 'outline'}
-              onClick={() => setSelectedCategory(category)}
-              className={selectedCategory === category ? 'bg-blue-600' : ''}
+        {/* Filter pills */}
+        <div className="mb-10 flex flex-wrap justify-center gap-2">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors cursor-pointer ${
+                selectedCategory === cat
+                  ? 'bg-slate-900 text-white'
+                  : 'border border-slate-200 bg-white text-slate-600 hover:bg-slate-50'
+              }`}
             >
-              {getCategoryLabel(category)}
-            </Button>
+              {categoryLabels[cat]}
+            </button>
           ))}
         </div>
 
-        {/* Portfolio Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredItems.map((item) => (
-            <div
-              key={item.id}
-              className="group bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-2xl transition-shadow"
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-                <div className="absolute top-4 right-4">
-                  <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm">
-                    {getCategoryLabel(item.category)}
+        {loading ? (
+          <div className="py-20 text-center text-sm text-slate-400">Loading projects…</div>
+        ) : (
+          <div ref={gridRef} className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {filteredItems.map((item) => (
+              <div
+                key={item.id}
+                className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow"
+              >
+                <div className="relative h-44 overflow-hidden bg-slate-100">
+                  <img
+                    src={item.imageUrl}
+                    alt={item.title}
+                    className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
+                  <span className="absolute top-3 right-3 rounded-full bg-teal-600 px-3 py-0.5 text-xs font-semibold text-white">
+                    {categoryLabels[item.category] || item.category}
                   </span>
                 </div>
-              </div>
-
-              <div className="p-6">
-                <h3 className="font-bold text-gray-900 mb-2 text-lg">
-                  {item.title}
-                </h3>
-
-                <p className="text-gray-600 mb-4 line-clamp-3">
-                  {item.description}
-                </p>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Calendar className="w-4 h-4 mr-1" />
-                    {item.date}
+                <div className="p-5">
+                  <h3 className="mb-1.5 font-bold text-slate-900">{item.title}</h3>
+                  <p className="mb-4 line-clamp-2 text-sm text-slate-500">{item.description}</p>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                      <Calendar className="h-3.5 w-3.5" />
+                      {item.date}
+                    </div>
+                    {item.link && (
+                      <a
+                        href={item.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 text-xs font-semibold text-teal-600 hover:text-teal-700 transition-colors"
+                      >
+                        View Project
+                        <ExternalLink className="h-3.5 w-3.5" />
+                      </a>
+                    )}
                   </div>
-
-                  {item.link && (
-                    <a
-                      href={item.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center text-blue-600 hover:text-blue-700"
-                    >
-                      <span className="text-sm mr-1">{t('portfolio.view')}</span>
-                      <ExternalLink className="w-4 h-4" />
-                    </a>
-                  )}
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
-        {filteredItems.length === 0 && (
-          <div className="text-center py-12 text-gray-500">
-            {t('portfolio.empty')}
+        {!loading && filteredItems.length === 0 && (
+          <div className="py-16 text-center text-sm text-slate-400">
+            No projects in this category yet.
           </div>
         )}
       </div>

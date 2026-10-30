@@ -9,7 +9,7 @@ import { seedDatabase } from '../../lib/firestore';
 import { useTranslation } from '../../lib/i18n';
 
 interface AdminLoginProps {
-  onLogin: (email: string, password: string) => void;
+  onLogin: () => void;
   onClose: () => void;
 }
 
@@ -25,36 +25,15 @@ export function AdminLogin({ onLogin, onClose }: AdminLoginProps) {
     setLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      toast.success(t('admin.loginSuccess') || 'Logged in successfully!');
-      onLogin(email, password);
-    } catch (error: any) {
-      console.warn("Firebase auth sign in note:", error?.message);
-      // Fallback admin check for company admin credentials
-      const cleanEmail = email.toLowerCase().trim();
-      if (
-        cleanEmail === 'graycodderweb@gmail.com' ||
-        cleanEmail === 'graycodder@gmail.com' ||
-        cleanEmail === 'admin@graycodder.com' ||
-        cleanEmail.includes('graycodder') ||
-        password === '1234Mails' ||
-        password === 'admin123' ||
-        password === 'graycodder' ||
-        password === 'admin'
-      ) {
-        toast.success('Admin login successful!');
-        onLogin(email, password);
-      } else {
-        toast.error('Invalid admin credentials.');
-      }
+      await signInWithEmailAndPassword(auth, email.trim(), password);
+      toast.success('Logged in successfully!');
+      onLogin();
+    } catch {
+      // Generic error — do not reveal whether email or password was wrong
+      toast.error('Invalid credentials. Please try again.');
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleQuickAdminLogin = () => {
-    toast.success('Admin access granted!');
-    onLogin('graycodderweb@gmail.com', 'admin');
   };
 
   const handleSeed = async () => {
@@ -71,72 +50,68 @@ export function AdminLogin({ onLogin, onClose }: AdminLoginProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg max-w-md w-full p-8">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl max-w-md w-full p-8 shadow-xl border border-slate-200">
         <div className="text-center mb-6">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-            <Lock className="w-8 h-8 text-blue-600" />
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-slate-100 rounded-full mb-4">
+            <Lock className="w-7 h-7 text-slate-700" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">{t('admin.title')}</h2>
-          <p className="text-gray-600 mt-2">
+          <h2 className="text-2xl font-bold text-slate-900">{t('admin.title')}</h2>
+          <p className="text-slate-500 mt-2 text-sm">
             {t('admin.subtitle')}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="admin-email" className="block text-sm font-medium text-slate-700 mb-1">
               {t('admin.emailLabel')}
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
-                id="email"
+                id="admin-email"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="pl-10"
                 placeholder={t('admin.emailPlaceholder')}
                 required
+                autoComplete="email"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+            <label htmlFor="admin-password" className="block text-sm font-medium text-slate-700 mb-1">
               {t('admin.passwordLabel')}
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
               <Input
-                id="password"
+                id="admin-password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="pl-10"
                 placeholder={t('admin.passwordPlaceholder')}
                 required
+                autoComplete="current-password"
               />
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+          <div className="flex gap-3 pt-2">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 cursor-pointer">
               {t('admin.cancel')}
             </Button>
-            <Button type="submit" className="flex-1 bg-blue-600 hover:bg-blue-700" disabled={loading}>
+            <Button
+              type="submit"
+              className="flex-1 bg-slate-900 hover:bg-slate-700 text-white cursor-pointer"
+              disabled={loading}
+            >
               {loading ? t('admin.loggingIn') : t('admin.loginBtn')}
             </Button>
-          </div>
-
-          <div className="pt-2 text-center">
-            <button
-              type="button"
-              onClick={handleQuickAdminLogin}
-              className="text-xs text-blue-600 hover:text-blue-800 font-semibold underline cursor-pointer"
-            >
-              ⚡ Quick Admin Access (graycodderweb@gmail.com)
-            </button>
           </div>
         </form>
 
@@ -145,7 +120,7 @@ export function AdminLogin({ onLogin, onClose }: AdminLoginProps) {
             <Button
               type="button"
               variant="ghost"
-              className="w-full text-gray-500 hover:text-gray-700 text-xs cursor-pointer"
+              className="w-full text-slate-400 hover:text-slate-600 text-xs cursor-pointer"
               onClick={handleSeed}
               disabled={seeding}
             >
@@ -154,10 +129,6 @@ export function AdminLogin({ onLogin, onClose }: AdminLoginProps) {
             </Button>
           </div>
         )}
-
-        <p className="text-xs text-gray-500 text-center mt-2">
-          {t('admin.credentialsNote')}
-        </p>
       </div>
     </div>
   );
