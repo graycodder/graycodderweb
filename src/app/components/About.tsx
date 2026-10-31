@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { MapPin, Globe, Target, Eye, Award } from 'lucide-react';
+import emergingFdeImg from '../../assets/emerging-fde.png';
 
 interface AboutProps {
   onAdminClick: () => void;
@@ -95,14 +96,14 @@ export function About({ onAdminClick }: AboutProps) {
             </div>
           </div>
 
-          <div className="relative h-80 overflow-hidden rounded-2xl shadow-sm">
+          <div className="relative aspect-[3/2] w-full overflow-hidden rounded-2xl shadow-md border border-slate-100">
             <img
-              src="https://images.unsplash.com/photo-1741388505655-3322689ffad6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900"
-              alt="Chellanam Kerala"
+              src={emergingFdeImg}
+              alt="Emerging FDE - Forward Deployed Engineer"
               className="h-full w-full object-cover"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/30 to-transparent" />
           </div>
+
         </div>
 
         {/* Pillars */}
